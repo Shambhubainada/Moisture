@@ -764,10 +764,27 @@ function renderMoistureStackStatus(){
   const store=moistureStore();
   const pending=[];
   active.forEach(r=>{const st=stack(r),rec=store[st];const entries=rec?.activities||rec?.truckEntries||rec?.entries||[];const hasEntry=entries.length>=1 && entries.some(e=>num(e.bags)>0);if(rec?.addedToMoisture||hasEntry)pending.push(r);});
-  const item=(r,cls,label)=>{const rice=isRice(r);const st=stack(r);return `<div class="mo-stack-item ${cls} ${rice?'rice-stack':'wheat-stack'}"><span><b>${esc(st)}</b> · Shed ${esc(shed(r))} · <strong>${esc(commodity(r))}</strong></span><span class="mo-stack-actions"><button onclick="selectMoistureStack('${String(st).replace(/'/g,"\\'")}')">OPEN</button><button class="mo-delete-btn" onclick="deleteMoistureStackWithPin('${String(st).replace(/'/g,"\\'")}')">🗑 DELETE</button></span></div>`};
+  const item=(r,cls,label)=>{const rice=isRice(r);const st=stack(r);return `<div class="mo-stack-item ${cls} ${rice?'rice-stack':'wheat-stack'}"><span><b>${esc(st)}</b> · Shed ${esc(shed(r))} · <strong>${esc(commodity(r))}</strong></span><span class="mo-stack-actions"><button onclick="openUnderIssueStack('${String(st).replace(/'/g,"\\'")}')">OPEN</button><button class="mo-delete-btn" onclick="deleteMoistureStackWithPin('${String(st).replace(/'/g,"\\'")}')">🗑 DELETE</button></span></div>`};
   box.innerHTML=`<div class="mo-status-card mo-pending"><div class="mo-status-head"><span>🟠 UNDER ISSUE STACK</span><span class="mo-status-count">${pending.length}</span></div><div class="smallmuted">Moisture issue wale stacks — Wheat aur Rice alag colour me</div><div class="mo-stack-list">${pending.length?pending.map(r=>item(r,'mo-pending','Pending')).join(''):'<div class="empty">No pending stack.</div>'}</div></div>`;
 }
 function selectMoistureStack(st){const sel=$('mStack');if(!sel)return;sel.value=st;localStorage.setItem('shambhuSelectedMoistureStack',st);loadMoistureStack();document.querySelector('.mo-final-top')?.scrollIntoView({behavior:'smooth',block:'start'});}
+function openUnderIssueStack(st){
+  const r=rows.find(x=>stack(x)===st);if(!r){alert('Selected stack Master Sheet me nahi mila.');return}
+  const all=moistureStore(),rec=stackRecord(st),total=num(val(r,'Bags','Bags (Nos.)','No. of Bags')),issued=stackIssuedTotal(rec),updated=stackUpdatedTotal(rec),remaining=Math.max(0,total-issued);
+  const autoRmc=stackMasterRmc(r),rmc=rec.manualRmc!=null&&rec.manualRmc!==''?num(rec.manualRmc):autoRmc;
+  const entries=rec.activities||[];
+  localStorage.setItem('shambhuSelectedMoistureStack',st);
+  const entryHtml=entries.length?`<div class="under-open-history">${entries.map((e,i)=>`<div class="under-open-entry"><span><b>${i+1}. ${num(e.bags).toLocaleString()} bags</b> · ${num(e.moisture).toFixed(2)}%</span><small>${esc(e.date||'—')}</small></div>`).join('')}</div>`:'<div class="empty">Abhi koi saved moisture entry nahi hai.</div>';
+  $('modalTitle').textContent=`📦 OPEN STACK — ${st}`;
+  $('modalBody').innerHTML=`<div class="under-open-box">
+    <div class="under-open-meta"><div><span>Stack</span><b>${esc(st)}</b></div><div><span>Receipt Date</span><b>${esc(dateText(receipt(r))||'—')}</b></div><div><span>Crop Year</span><b>${esc(cropYearFromRow(r)||'—')}</b></div><div><span>Commodity</span><b>${esc(commodity(r)||'—')}</b></div><div><span>RMC</span><b>${rmc.toFixed(2)}%</b></div></div>
+    <div class="under-open-summary"><div><span>Total Bags</span><b>${total.toLocaleString()}</b></div><div><span>Saved Moisture Bags</span><b>${updated.toLocaleString()}</b></div><div class="remain"><span>Remaining Bags</span><b>${remaining.toLocaleString()}</b></div></div>
+    <div class="under-open-title">💧 SAVED MOISTURE ENTRIES</div>${entryHtml}
+    <button class="under-open-tap" onclick="selectMoistureStack('${String(st).replace(/'/g,"\\'")}');setTimeout(()=>openMoistureSaveModal(),80)">👉 TAP HERE — UPDATE REMAINING MOISTURE</button>
+    <div class="smallmuted" style="margin-top:8px">Tap karte hi Bags + Moisture popup open hoga aur live Projection Difference dikhega.</div>
+  </div>`;
+  $('modal').classList.add('show');
+}
 function moistureStore(){return JSON.parse(localStorage.getItem('shambhuMoistureActive')||'{}')}
 function saveMoistureStore(o){localStorage.setItem('shambhuMoistureActive',JSON.stringify(o))}
 function stackMasterRmc(r){return num(val(r,'RMC %','RMC%','RMC','Rmc'))}
@@ -1079,6 +1096,10 @@ body.moisture-active .content{padding-top:8px}
 .current-rmc-card{background:#eefaf4;border:2px solid #0a7a4b}
 @media(max-width:900px){.mo-stack-details{grid-template-columns:repeat(2,minmax(0,1fr))}.current-rmc-card{grid-column:1/-1}}
 @media(max-width:520px){.mo-stack-details{grid-template-columns:1fr 1fr}.mo-detail-card>b{font-size:15px}.manual-rmc-row{flex-direction:column}.manual-rmc-row input,.manual-rmc-row button{width:100%}}
+<style id="under-issue-open-popup">
+.under-open-box{display:grid;gap:10px}.under-open-meta{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.under-open-meta>div,.under-open-summary>div{background:#f7fbf9;border:1px solid #dbe8e2;border-radius:9px;padding:8px;text-align:center}.under-open-meta span,.under-open-summary span{display:block;font-size:9px;font-weight:900;color:#5b7068}.under-open-meta b,.under-open-summary b{display:block;margin-top:4px;font-size:13px;color:#073d2c}.under-open-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.under-open-summary .remain{background:#fff7df;border:2px solid #e3a018}.under-open-title{font-weight:900;background:#073d2c;color:#fff;padding:9px;border-radius:8px}.under-open-history{display:grid;gap:6px;max-height:230px;overflow:auto}.under-open-entry{display:flex;justify-content:space-between;gap:8px;align-items:center;border:1px solid #dbe8e2;border-radius:8px;padding:9px;background:#fff}.under-open-entry small{color:#60756c;font-size:10px}.under-open-tap{border:0;border-radius:10px;padding:13px;background:#0a7a4b;color:#fff;font-weight:950;font-size:14px;box-shadow:0 4px 12px #0a7a4b22}.under-open-tap:hover{background:#075d3b}@media(max-width:600px){.under-open-meta{grid-template-columns:1fr 1fr}.under-open-meta>div:last-child{grid-column:1/-1}.under-open-summary{grid-template-columns:1fr 1fr}.under-open-summary .remain{grid-column:1/-1}.under-open-entry{align-items:flex-start;flex-direction:column}}
+</style>
+
 </style>
 
 <style id="moisture-size-final-fix">
