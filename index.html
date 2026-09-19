@@ -770,21 +770,22 @@ function renderMoistureStackStatus(){
 }
 function selectMoistureStack(st){const sel=$('mStack');if(!sel)return;sel.value=st;localStorage.setItem('shambhuSelectedMoistureStack',st);loadMoistureStack();document.querySelector('.mo-final-top')?.scrollIntoView({behavior:'smooth',block:'start'});}
 function openUnderIssueStack(st){
-  const r=rows.find(x=>stack(x)===st);if(!r){alert('Selected stack Master Sheet me nahi mila.');return}
-  const all=moistureStore(),rec=stackRecord(st),total=num(val(r,'Bags','Bags (Nos.)','No. of Bags')),issued=stackIssuedTotal(rec),updated=stackUpdatedTotal(rec),remaining=Math.max(0,total-issued);
-  const autoRmc=stackMasterRmc(r),rmc=rec.manualRmc!=null&&rec.manualRmc!==''?num(rec.manualRmc):autoRmc;
-  const entries=rec.activities||[];
+  const r=rows.find(x=>stack(x)===st);
+  if(!r){alert('Selected stack Master Sheet me nahi mila.');return}
+
+  // FINAL: OPEN is a normal-page action — no popup.
+  // Select this stack, keep its saved entries visible in the page table,
+  // and move the user directly to the saved-entry/update area.
   localStorage.setItem('shambhuSelectedMoistureStack',st);
-  const entryHtml=entries.length?`<div class="under-open-history">${entries.map((e,i)=>`<div class="under-open-entry"><span><b>${i+1}. ${num(e.bags).toLocaleString()} bags</b> · ${num(e.moisture).toFixed(2)}%</span><small>${esc(e.date||'—')}</small></div>`).join('')}</div>`:'<div class="empty">Abhi koi saved moisture entry nahi hai.</div>';
-  $('modalTitle').textContent=`📦 OPEN STACK — ${st}`;
-  $('modalBody').innerHTML=`<div class="under-open-box">
-    <div class="under-open-meta"><div><span>Stack</span><b>${esc(st)}</b></div><div><span>Receipt Date</span><b>${esc(dateText(receipt(r))||'—')}</b></div><div><span>Crop Year</span><b>${esc(cropYearFromRow(r)||'—')}</b></div><div><span>Commodity</span><b>${esc(commodity(r)||'—')}</b></div><div><span>RMC</span><b>${rmc.toFixed(2)}%</b></div></div>
-    <div class="under-open-summary"><div><span>Total Bags</span><b>${total.toLocaleString()}</b></div><div><span>Saved Moisture Bags</span><b>${updated.toLocaleString()}</b></div><div class="remain"><span>Remaining Bags</span><b>${remaining.toLocaleString()}</b></div></div>
-    <div class="under-open-title">💧 SAVED MOISTURE ENTRIES</div>${entryHtml}
-    <button class="under-open-tap" onclick="selectMoistureStack('${String(st).replace(/'/g,"\\'")}');setTimeout(()=>openMoistureSaveModal(),80)">👉 MOISTURE UPDATE</button>
-    <div class="smallmuted" style="margin-top:8px">Tap karte hi Bags + Moisture popup open hoga aur live Projection Difference dikhega.</div>
-  </div>`;
-  $('modal').classList.add('show');
+  const sel=$('mStack');
+  if(sel) sel.value=st;
+  loadMoistureStack();
+  renderMoistureStackStatus();
+  closeModal();
+  requestAnimationFrame(()=>{
+    const target=document.querySelector('.saved-moisture-focus');
+    if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
+  });
 }
 function moistureStore(){return JSON.parse(localStorage.getItem('shambhuMoistureActive')||'{}')}
 function saveMoistureStore(o){localStorage.setItem('shambhuMoistureActive',JSON.stringify(o))}
