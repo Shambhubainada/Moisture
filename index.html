@@ -332,6 +332,7 @@ body.dashboard-open .final-quick-row{display:none!important}
 /* Louder pending-work alert tone */
 </style>
 </style>
+<script src="final_interaction_patch.js"></script>
 </head>
 <body>
 <div class="pin-screen" id="pinScreen">
@@ -780,7 +781,7 @@ function openUnderIssueStack(st){
     <div class="under-open-meta"><div><span>Stack</span><b>${esc(st)}</b></div><div><span>Receipt Date</span><b>${esc(dateText(receipt(r))||'—')}</b></div><div><span>Crop Year</span><b>${esc(cropYearFromRow(r)||'—')}</b></div><div><span>Commodity</span><b>${esc(commodity(r)||'—')}</b></div><div><span>RMC</span><b>${rmc.toFixed(2)}%</b></div></div>
     <div class="under-open-summary"><div><span>Total Bags</span><b>${total.toLocaleString()}</b></div><div><span>Saved Moisture Bags</span><b>${updated.toLocaleString()}</b></div><div class="remain"><span>Remaining Bags</span><b>${remaining.toLocaleString()}</b></div></div>
     <div class="under-open-title">💧 SAVED MOISTURE ENTRIES</div>${entryHtml}
-    <button class="under-open-tap" onclick="selectMoistureStack('${String(st).replace(/'/g,"\\'")}');setTimeout(()=>openMoistureSaveModal(),80)">👉 TAP HERE — UPDATE REMAINING MOISTURE</button>
+    <button class="under-open-tap" onclick="selectMoistureStack('${String(st).replace(/'/g,"\\'")}');setTimeout(()=>openMoistureSaveModal(),80)">👉 MOISTURE UPDATE</button>
     <div class="smallmuted" style="margin-top:8px">Tap karte hi Bags + Moisture popup open hoga aur live Projection Difference dikhega.</div>
   </div>`;
   $('modal').classList.add('show');
