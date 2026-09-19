@@ -718,6 +718,7 @@ function moisturePage(){
     </div>
 
     <div class="mo-focus-hidden" aria-hidden="true">
+      <select id="mStack">${opts}</select>
       <input id="mReceipt"><input id="mCrop"><input id="mStackBags"><div id="mStackBar"></div>
       <div id="mRmcLegacy"></div><div id="mRmcModeLegacy"></div><div id="mImc">0.00</div><div id="mDiff">0.00</div><div id="mDiffCard"></div><div id="mDiffText"></div>
       <input id="mRmcAuto"><div id="mCompleteStatus"></div><button id="mCompleteBtn" disabled></button>
@@ -769,7 +770,7 @@ function renderMoistureStackStatus(){
   const store=moistureStore();
   const pending=[];
   active.forEach(r=>{const st=stack(r),rec=store[st];const entries=rec?.activities||rec?.truckEntries||rec?.entries||[];const hasEntry=entries.length>=1 && entries.some(e=>num(e.bags)>0);if(rec?.addedToMoisture||hasEntry)pending.push(r);});
-  const item=(r,cls,label)=>{const rice=isRice(r);const st=stack(r);return `<div class="mo-stack-item ${cls} ${rice?'rice-stack':'wheat-stack'}"><span><b>${esc(st)}</b> · Shed ${esc(shed(r))} · <strong>${esc(commodity(r))}</strong></span><span class="mo-stack-actions"><button onclick="openUnderIssueStack('${String(st).replace(/'/g,"\\'")}')">OPEN</button><button class="mo-delete-btn" onclick="deleteMoistureStackWithPin('${String(st).replace(/'/g,"\\'")}')">🗑 DELETE</button></span></div>`};
+  const item=(r,cls,label)=>{const rice=isRice(r);const st=stack(r);return `<div class="mo-stack-item ${cls} ${rice?'rice-stack':'wheat-stack'}"><span><b>${esc(st)}</b> · Shed ${esc(shed(r))} · <strong>${esc(commodity(r))}</strong></span><span class="mo-stack-actions"><button onclick="openUnderIssueStack('${String(st).replace(/'/g,"\\'")}')">SELECT</button><button class="mo-delete-btn" onclick="deleteMoistureStackWithPin('${String(st).replace(/'/g,"\\'")}')">🗑 DELETE</button></span></div>`};
   box.innerHTML=`<div class="mo-status-card mo-pending"><div class="mo-status-head"><span>🟠 UNDER ISSUE STACK</span><span class="mo-status-count">${pending.length}</span></div><div class="smallmuted">Moisture issue wale stacks — Wheat aur Rice alag colour me</div><div class="mo-stack-list">${pending.length?pending.map(r=>item(r,'mo-pending','Pending')).join(''):'<div class="empty">No pending stack.</div>'}</div></div>`;
 }
 function selectMoistureStack(st){const sel=$('mStack');if(!sel)return;sel.value=st;localStorage.setItem('shambhuSelectedMoistureStack',st);loadMoistureStack();document.querySelector('.mo-final-top')?.scrollIntoView({behavior:'smooth',block:'start'});}
@@ -777,24 +778,23 @@ function openUnderIssueStack(st){
   const r=rows.find(x=>stack(x)===st);
   if(!r){alert('Selected stack Master Sheet me nahi mila.');return}
 
-  // FINAL: OPEN is a normal-page action — no popup.
-  // Select this stack, keep its saved entries visible in the page table,
-  // and move the user directly to the saved-entry/update area.
+  // SELECT: normal-page action; no popup. Make this stack the active
+  // moisture-update stack, show its saved entries, and keep it selected
+  // for the next moisture update of remaining bags.
   localStorage.setItem('shambhuSelectedMoistureStack',st);
   const sel=$('mStack');
   if(sel) sel.value=st;
   loadMoistureStack();
   renderMoistureStackStatus();
-  closeModal();
   requestAnimationFrame(()=>{
-    const target=document.querySelector('.saved-moisture-focus');
+    const target=document.querySelector('.moisture-update-focus');
     if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
   });
 }
 function moistureStore(){return JSON.parse(localStorage.getItem('shambhuMoistureActive')||'{}')}
 function saveMoistureStore(o){localStorage.setItem('shambhuMoistureActive',JSON.stringify(o))}
 function stackMasterRmc(r){return num(val(r,'RMC %','RMC%','RMC','Rmc'))}
-function currentMoistureStack(){return $('mStack')?.value||''}
+function currentMoistureStack(){return $('mStack')?.value||localStorage.getItem('shambhuSelectedMoistureStack')||''}
 function stackRecord(st){const all=moistureStore();let rec=all[st];if(!rec)rec={stack:st,truckEntries:[],activities:[],manualRmc:null,addedToMoisture:false};if(!Array.isArray(rec.activities))rec.activities=[];if(!rec.activities.length && Array.isArray(rec.truckEntries) && rec.truckEntries.length){rec.activities=rec.truckEntries.map(e=>({bags:num(e.bags),moisture:e.moisture??'',date:e.updatedAt||e.entryAt||dateTimeNow(),printSlip:e.printSlip??true}));rec.truckEntries=[];all[st]=rec;saveMoistureStore(all);}return rec}
 function stackIssuedTotal(rec){return (rec.activities||[]).reduce((s,e)=>s+num(e.bags),0)}
 function stackUpdatedTotal(rec){return (rec.activities||[]).reduce((s,e)=>s+(e.moisture!==''&&num(e.bags)>0?num(e.bags):0),0)}
