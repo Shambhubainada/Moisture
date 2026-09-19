@@ -59,6 +59,39 @@
 @media(max-width:560px){.modal{padding:8px}.modalbox{width:100%;max-height:94vh;padding:12px;border-radius:14px}.modalhead{position:sticky;top:0;background:#fff;z-index:2;padding-bottom:8px}.mo-popup-stack-grid{grid-template-columns:1fr 1fr}.mo-popup-stack-grid b{font-size:18px}.mo-popup-input-head{font-size:13px}.mo-popup-fields input{font-size:18px;padding:12px}.mo-popup-bottom{grid-template-columns:1fr}.mo-popup-save{min-height:58px}.mo-projection{min-height:78px}}
 
 
+
+/* ===== FINAL MOBILE MOISTURE POPUP COMPACT ===== */
+.mo-popup-stack-grid{grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:9px}
+.mo-popup-stack-grid>div{padding:7px;border-radius:8px}
+.mo-popup-stack-grid span{font-size:9px;margin-bottom:3px}
+.mo-popup-stack-grid b{font-size:15px}
+.mo-popup-stack-grid .remain b{font-size:15px}
+.mo-popup-stack-grid .pop-proj{background:#f1faf5;border-color:#bde4ce}
+.mo-popup-stack-grid .pop-proj span{color:#08733f}
+.mo-popup-stack-grid .pop-proj strong{display:block;font-size:16px;line-height:1.1}
+.mo-popup-stack-grid .pop-proj small{display:block;font-size:8px;color:#687b74;margin-top:2px}
+.mo-popup-input-head{padding:7px 9px;font-size:11px}
+.mo-popup-fields{padding:8px;gap:6px}
+.mo-popup-fields label{font-size:10px;margin-bottom:4px}
+.mo-popup-fields input{padding:9px 8px;font-size:16px;min-height:44px}
+.mo-popup-entry{margin-top:7px;padding:7px 9px;font-size:11px}
+.mo-popup-save{font-size:13px!important;padding:10px 16px!important;min-height:44px!important}
+.mo-popup-bottom{display:block;margin-top:8px}
+.mo-popup-bottom .mo-projection{display:none}
+@media(max-width:560px){
+  .modal{align-items:flex-start;padding:4px 6px;overflow-y:auto}
+  .modalbox{max-height:calc(100vh - 8px);padding:9px;border-radius:11px;margin-top:0;width:100%}
+  .modalhead{padding-bottom:5px}
+  .modalhead h3{font-size:14px!important;margin:0}
+  .close{padding:5px 8px;font-size:11px}
+  .mo-popup-stack-grid{grid-template-columns:repeat(4,1fr);gap:4px}
+  .mo-popup-stack-grid>div{padding:6px 3px}
+  .mo-popup-stack-grid span{font-size:8px}
+  .mo-popup-stack-grid b,.mo-popup-stack-grid .remain b{font-size:13px}
+  .mo-popup-stack-grid .pop-proj strong{font-size:14px}
+  .mo-popup-fields input{font-size:16px;padding:9px 6px}
+}
+
 /* ===== MOISTURE UPDATE FOCUSED SCREEN ===== */
 .moisture-focused-page{max-width:900px;margin:0 auto}
 .mo-focus-section{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:12px;box-shadow:var(--shadow)}
@@ -80,7 +113,7 @@
 .mo-status-card.mo-pending .mo-status-count{font-size:28px}
 .mo-status-card.mo-pending .mo-stack-list{max-height:250px;gap:8px}
 .mo-status-card.mo-pending .mo-stack-item{padding:11px 12px;font-size:13px;border-color:#efd99e;background:#fffdf7}
-.mo-status-card.mo-pending .mo-stack-item button{padding:8px 12px;font-size:12px;background:#d98a18;color:#fff}
+.mo-status-card.mo-pending .mo-stack-item button{padding:6px 9px;font-size:10px;background:#d98a18;color:#fff}
 .mo-entry{border:2px solid #b7dfca;background:linear-gradient(135deg,#f2fff8,#ffffff);padding:15px}
 .mo-entry h3{font-size:17px}
 .mo-entry-grid{gap:6px}
@@ -718,7 +751,6 @@ function moisturePage(){
     </div>
 
     <div class="mo-focus-hidden" aria-hidden="true">
-      <select id="mStack">${opts}</select>
       <input id="mReceipt"><input id="mCrop"><input id="mStackBags"><div id="mStackBar"></div>
       <div id="mRmcLegacy"></div><div id="mRmcModeLegacy"></div><div id="mImc">0.00</div><div id="mDiff">0.00</div><div id="mDiffCard"></div><div id="mDiffText"></div>
       <input id="mRmcAuto"><div id="mCompleteStatus"></div><button id="mCompleteBtn" disabled></button>
@@ -770,7 +802,7 @@ function renderMoistureStackStatus(){
   const store=moistureStore();
   const pending=[];
   active.forEach(r=>{const st=stack(r),rec=store[st];const entries=rec?.activities||rec?.truckEntries||rec?.entries||[];const hasEntry=entries.length>=1 && entries.some(e=>num(e.bags)>0);if(rec?.addedToMoisture||hasEntry)pending.push(r);});
-  const item=(r,cls,label)=>{const rice=isRice(r);const st=stack(r);return `<div class="mo-stack-item ${cls} ${rice?'rice-stack':'wheat-stack'}"><span><b>${esc(st)}</b> · Shed ${esc(shed(r))} · <strong>${esc(commodity(r))}</strong></span><span class="mo-stack-actions"><button onclick="openUnderIssueStack('${String(st).replace(/'/g,"\\'")}')">SELECT</button><button class="mo-delete-btn" onclick="deleteMoistureStackWithPin('${String(st).replace(/'/g,"\\'")}')">🗑 DELETE</button></span></div>`};
+  const item=(r,cls,label)=>{const rice=isRice(r);const st=stack(r);return `<div class="mo-stack-item ${cls} ${rice?'rice-stack':'wheat-stack'}"><span><b>${esc(st)}</b> · Shed ${esc(shed(r))} · <strong>${esc(commodity(r))}</strong></span><span class="mo-stack-actions"><button onclick="openUnderIssueStack('${String(st).replace(/'/g,"\\'")}')">OPEN</button><button class="mo-delete-btn" onclick="deleteMoistureStackWithPin('${String(st).replace(/'/g,"\\'")}')">🗑 DELETE</button></span></div>`};
   box.innerHTML=`<div class="mo-status-card mo-pending"><div class="mo-status-head"><span>🟠 UNDER ISSUE STACK</span><span class="mo-status-count">${pending.length}</span></div><div class="smallmuted">Moisture issue wale stacks — Wheat aur Rice alag colour me</div><div class="mo-stack-list">${pending.length?pending.map(r=>item(r,'mo-pending','Pending')).join(''):'<div class="empty">No pending stack.</div>'}</div></div>`;
 }
 function selectMoistureStack(st){const sel=$('mStack');if(!sel)return;sel.value=st;localStorage.setItem('shambhuSelectedMoistureStack',st);loadMoistureStack();document.querySelector('.mo-final-top')?.scrollIntoView({behavior:'smooth',block:'start'});}
@@ -778,23 +810,24 @@ function openUnderIssueStack(st){
   const r=rows.find(x=>stack(x)===st);
   if(!r){alert('Selected stack Master Sheet me nahi mila.');return}
 
-  // SELECT: normal-page action; no popup. Make this stack the active
-  // moisture-update stack, show its saved entries, and keep it selected
-  // for the next moisture update of remaining bags.
+  // FINAL: OPEN is a normal-page action — no popup.
+  // Select this stack, keep its saved entries visible in the page table,
+  // and move the user directly to the saved-entry/update area.
   localStorage.setItem('shambhuSelectedMoistureStack',st);
   const sel=$('mStack');
   if(sel) sel.value=st;
   loadMoistureStack();
   renderMoistureStackStatus();
+  closeModal();
   requestAnimationFrame(()=>{
-    const target=document.querySelector('.moisture-update-focus');
+    const target=document.querySelector('.saved-moisture-focus');
     if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
   });
 }
 function moistureStore(){return JSON.parse(localStorage.getItem('shambhuMoistureActive')||'{}')}
 function saveMoistureStore(o){localStorage.setItem('shambhuMoistureActive',JSON.stringify(o))}
 function stackMasterRmc(r){return num(val(r,'RMC %','RMC%','RMC','Rmc'))}
-function currentMoistureStack(){return $('mStack')?.value||localStorage.getItem('shambhuSelectedMoistureStack')||''}
+function currentMoistureStack(){return $('mStack')?.value||''}
 function stackRecord(st){const all=moistureStore();let rec=all[st];if(!rec)rec={stack:st,truckEntries:[],activities:[],manualRmc:null,addedToMoisture:false};if(!Array.isArray(rec.activities))rec.activities=[];if(!rec.activities.length && Array.isArray(rec.truckEntries) && rec.truckEntries.length){rec.activities=rec.truckEntries.map(e=>({bags:num(e.bags),moisture:e.moisture??'',date:e.updatedAt||e.entryAt||dateTimeNow(),printSlip:e.printSlip??true}));rec.truckEntries=[];all[st]=rec;saveMoistureStore(all);}return rec}
 function stackIssuedTotal(rec){return (rec.activities||[]).reduce((s,e)=>s+num(e.bags),0)}
 function stackUpdatedTotal(rec){return (rec.activities||[]).reduce((s,e)=>s+(e.moisture!==''&&num(e.bags)>0?num(e.bags):0),0)}
@@ -836,10 +869,12 @@ function openMoistureSaveModal(){
   const rec=stackRecord(st),total=num($('mStackBags').value),updated=stackUpdatedTotal(rec),pending=Math.max(0,total-updated),maxAllowed=pending+100;
   const r=rows.find(x=>stack(x)===st)||{}, autoRmc=stackMasterRmc(r), currentRmc=(rec.manualRmc!=null&&rec.manualRmc!=='')?num(rec.manualRmc):autoRmc;
   $('modalTitle').textContent='💧 MOISTURE UPDATE';
+  const remaining=Math.max(0,total-updated);
   $('modalBody').innerHTML=`<div class="mo-popup-stack-grid">
       <div><span>Stack No.</span><b>${esc(st)}</b></div>
-      <div><span>Total Bags</span><b>${total.toLocaleString()}</b></div>
+      <div class="remain"><span>Remaining Bags</span><b id="popRemaining">${remaining.toLocaleString()}</b></div>
       <div><span>RMC</span><b>${currentRmc.toFixed(2)} %</b></div>
+      <div class="pop-proj"><span>Projection Difference</span><strong id="popProjection">0.00 %</strong><small>LIVE · IMC − RMC</small></div>
     </div>
     <div class="mo-popup-input-head"><span>Bag No.</span><span>Moisture %</span></div>
     <div class="mo-popup-fields">
@@ -849,7 +884,6 @@ function openMoistureSaveModal(){
     <div class="mo-popup-entry"><span>✓ Entry</span><b id="popEntryCount">${updated} / ${total}</b></div>
     <div class="mo-popup-bottom">
       <button class="mo-save mo-popup-save" onclick="saveMoistureFromModal()">💾 SAVE</button>
-      <div class="mo-projection"><span>Projection Difference</span><em>LIVE</em><strong id="popProjection">0.00 %</strong><small>IMC − RMC</small></div>
     </div>`;
   $('modal').classList.add('show');
   updateMoistureProjection();
@@ -864,7 +898,7 @@ function updateMoistureProjection(){
   const previewM=Number.isFinite(m)&&m>=0?m:0;
   const previewUpdated=updated+previewBags, previewWt=wt+(previewBags*previewM), imc=previewUpdated?previewWt/previewUpdated:0, diff=imc-rmc;
   const d=$('popProjection');if(d){d.textContent=`${diff>=0?'+':''}${diff.toFixed(2)} %`;d.style.color=diff>=0?'#08733f':'#c52635';}
-  const cnt=$('popEntryCount');if(cnt)cnt.textContent=`${Math.min(previewUpdated,total)} / ${total}`;
+  const cnt=$('popEntryCount');if(cnt)cnt.textContent=`${Math.min(previewUpdated,total)} / ${total}`;const rem=$('popRemaining');if(rem)rem.textContent=Math.max(0,total-previewUpdated).toLocaleString();
 }
 
 function moistureLimitForStack(st){const r=rows.find(x=>stack(x)===st)||{};return isRice(r)?15:14}
