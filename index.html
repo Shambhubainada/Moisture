@@ -410,7 +410,7 @@ body.dashboard-open .final-quick-row{display:none!important}
     <div class="pin-logo"><img src="./shambhu-shed-192.png" alt="Shambhu Shed logo"></div>
     <h2>SHAMBHU SHED</h2>
     <p>Enter PIN to open the QC Control site</p>
-    <input id="sitePin" type="tel" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" maxlength="6" placeholder="••••" autocomplete="off">
+    <input id="sitePin" type="tel" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" maxlength="6" placeholder="••••" autocomplete="off" autofocus>
     <div class="pin-error" id="pinError"></div>
     <button onclick="unlockSite()">🔓 UNLOCK</button>
     <button class="pin-change" onclick="changePin()">⚙ CHANGE PIN</button>
@@ -835,10 +835,10 @@ function renderMoistureStackStatus(){
   const store=moistureStore();
   const pending=[];
   active.forEach(r=>{const st=stack(r),rec=store[st];const entries=rec?.activities||rec?.truckEntries||rec?.entries||[];const hasEntry=entries.length>=1 && entries.some(e=>num(e.bags)>0);if(rec?.addedToMoisture||hasEntry)pending.push(r);});
-  const item=(r,cls,label)=>{const rice=isRice(r);const st=stack(r);return `<div class="mo-stack-item ${cls} ${rice?'rice-stack':'wheat-stack'}"><span><b>${esc(st)}</b> · Shed ${esc(shed(r))} · <strong>${esc(commodity(r))}</strong></span><span class="mo-stack-actions"><button class="mo-select-btn" onclick="selectMoistureStack('${String(st).replace(/'/g,"\\'")}')">SELECT</button><button class="mo-delete-btn" onclick="deleteMoistureStackWithPin('${String(st).replace(/'/g,"\\'")}')">🗑 DELETE</button></span></div>`};
+  const item=(r,cls,label)=>{const rice=isRice(r);const st=stack(r);const safe=String(st).replaceAll("\\","\\\\").replaceAll("'","\\'");return `<div class="mo-stack-item ${cls} ${rice?'rice-stack':'wheat-stack'}" role="button" tabindex="0" onclick="selectMoistureStack('${safe}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectMoistureStack('${safe}')}\"><span><b>${esc(st)}</b> · Shed ${esc(shed(r))} · <strong>${esc(commodity(r))}</strong></span><span class="mo-stack-actions"><button type="button" class="mo-select-btn" onclick="event.stopPropagation();selectMoistureStack('${safe}')">SELECT</button><button type="button" class="mo-delete-btn" onclick="event.stopPropagation();deleteMoistureStackWithPin('${safe}')">🗑 DELETE</button></span></div>`};
   box.innerHTML=`<div class="mo-status-card mo-pending"><div class="mo-status-head"><span>🟠 UNDER ISSUE STACK</span><span class="mo-status-count">${pending.length}</span></div><div class="smallmuted">Moisture issue wale stacks — Wheat aur Rice alag colour me</div><div class="mo-stack-list">${pending.length?pending.map(r=>item(r,'mo-pending','Pending')).join(''):'<div class="empty">No pending stack.</div>'}</div></div>`;
 }
-function selectMoistureStack(st){const key=String(st);const sel=$('mStack');if(!sel)return;sel.value=key;localStorage.setItem('shambhuSelectedMoistureStack',key);loadMoistureStack();renderMoistureStackStatus();requestAnimationFrame(()=>{const target=document.querySelector('.saved-moisture-focus');if(target)target.scrollIntoView({behavior:'smooth',block:'start'});});}
+function selectMoistureStack(st){const key=String(st||'').trim();if(!key)return;const r=rows.find(x=>String(stack(x))===key);if(!r){alert('Selected stack Master Sheet me nahi mila.');return}localStorage.setItem('shambhuSelectedMoistureStack',key);const sel=$('mStack');if(sel)sel.value=key;loadMoistureStack();renderMoistureStackStatus();requestAnimationFrame(()=>{const target=document.querySelector('.saved-moisture-focus');if(target)target.scrollIntoView({behavior:'smooth',block:'start'});});}
 function openUnderIssueStack(st){
   const r=rows.find(x=>stack(x)===st);
   if(!r){alert('Selected stack Master Sheet me nahi mila.');return}
@@ -1271,7 +1271,12 @@ body.moisture-active .content{padding-top:8px}
 <script>
 document.addEventListener('DOMContentLoaded',function(){
   const pin=document.getElementById('sitePin');
-  if(pin){ pin.addEventListener('click',()=>pin.focus()); setTimeout(()=>{if(document.getElementById('pinScreen')?.style.display!=='none') pin.focus();},250); }
+  if(pin){
+    pin.setAttribute('inputmode','numeric'); pin.setAttribute('type','tel'); pin.setAttribute('autocomplete','one-time-code');
+    const focusPin=()=>{pin.focus({preventScroll:true});};
+    pin.addEventListener('click',focusPin); pin.addEventListener('touchstart',focusPin,{passive:true});
+    setTimeout(()=>{if(document.getElementById('pinScreen')?.style.display!=='none') focusPin();},120);
+  }
 });
 </script>
 </body></html>
