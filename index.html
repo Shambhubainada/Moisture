@@ -17,14 +17,14 @@ button{font:inherit;font-weight:800;border:0;border-radius:11px;padding:10px 13p
 .stack{display:grid;grid-template-columns:1fr auto;gap:7px;align-items:center;padding:9px;border:1px solid var(--line);border-radius:12px;margin:6px 0}.stack.w{border-left:6px solid #d0a400}.stack.r{border-left:6px solid #2385c7}.stackname{font-weight:900}.meta{font-size:12px;color:var(--mut);margin-top:2px}.actions{display:flex;gap:5px}.actions button{padding:7px 9px;font-size:12px}
 .modal{position:fixed;inset:0;background:#0008;display:none;align-items:flex-start;justify-content:center;padding:8px;z-index:30;overflow:auto}.modal.show{display:flex}.sheet{width:min(520px,100%);background:#fff;border-radius:17px;padding:13px;margin-top:max(8px,env(safe-area-inset-top));max-height:calc(100dvh - 16px);overflow:auto;box-shadow:0 12px 35px #0005}
 .mhead{display:flex;justify-content:space-between;align-items:center;font-weight:900;margin-bottom:8px;gap:6px}.mhead b{flex:1;text-align:center}.x{font-size:22px;background:#f2f4f2;padding:3px 9px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.field label{display:block;font-size:12px;font-weight:800;color:var(--mut);margin-bottom:4px}.field input,.field select{width:100%;padding:11px;border:1px solid #cbd8d0;border-radius:10px;font-size:16px;background:#fff}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.moistgrid{grid-template-columns:1fr 1fr;gap:5px}.moistgrid .field input{padding:9px;font-size:15px}.field label{display:block;font-size:12px;font-weight:800;color:var(--mut);margin-bottom:4px}.field input,.field select{width:100%;padding:11px;border:1px solid #cbd8d0;border-radius:10px;font-size:16px;background:#fff}
 .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:7px 0}.sum{background:var(--gl);border-radius:10px;padding:7px;text-align:center;font-size:12px}.sum b{display:block;font-size:15px}
 .diff{font-weight:900;font-size:15px;padding:9px;border-radius:10px;text-align:center;background:#f1f4f2}.pos{color:#087b35;background:#eaf7ee}.neg{color:var(--r);background:#fff0f0}
 .entries{overflow-x:auto}.entry{min-width:470px;display:grid;grid-template-columns:32px 1.3fr .7fr .8fr .7fr 1fr;gap:5px;align-items:center;border-bottom:1px solid var(--line);padding:7px 2px;font-size:12px}.entryhead{font-weight:900;background:#f5f8f6}.under{font-size:12px;padding:7px 0;color:var(--mut)}.complete{margin-top:9px}.complete:disabled{opacity:.45}
 .login{position:fixed;inset:0;background:#eef7f0;display:flex;align-items:center;justify-content:center;padding:18px;z-index:50}.loginbox{width:min(380px,100%);background:white;border-radius:20px;padding:20px;text-align:center;border:1px solid var(--line)}.loginbox input{width:100%;padding:13px;font-size:20px;text-align:center;letter-spacing:5px;border:1px solid var(--line);border-radius:12px;margin:10px 0}
 .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#173126;color:#fff;padding:9px 13px;border-radius:999px;display:none;z-index:80;font-size:13px}
 @media(max-width:520px){header{padding-top:6px}.brand{font-size:18px}.title{font-size:16px}.truck{font-size:42px}.fci{width:42px;height:42px}.visual{height:47px}.grid{grid-template-columns:1fr 1fr}.sheet{margin-top:5px;padding:11px}.summary{gap:4px}.sum{padding:6px 3px}.stack{padding:8px}.actions button{padding:7px 8px}}
-@media(max-width:360px){.stack{grid-template-columns:1fr}.actions{justify-content:flex-end}.grid{grid-template-columns:1fr}.summary{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:360px){.stack{grid-template-columns:1fr}.actions{justify-content:flex-end}.grid{grid-template-columns:1fr}.moistgrid{grid-template-columns:1fr 1fr}.summary{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
@@ -42,18 +42,22 @@ button{font:inherit;font-weight:800;border:0;border-radius:11px;padding:10px 13p
 <div class="toast" id="toast"></div>
 
 <script>
-const PIN="9001", KEY="fsd_sabarmati_moisture_final";
-let db=JSON.parse(localStorage.getItem(KEY)||'{"stacks":[],"history":[]}'), current=sessionStorage.getItem(KEY+'_current')||null;
+const PIN="9001", KEY="fsd_sabarmati_moisture_final", SESSION="fsd_sabarmati_session", VIEW="fsd_sabarmati_current_stack";
+let db=JSON.parse(localStorage.getItem(KEY)||'{"stacks":[],"history":[]}'), current=null;
+function isUnlocked(){return sessionStorage.getItem(SESSION)==='1'}
+function unlock(){sessionStorage.setItem(SESSION,'1')}
+function restoreView(){const id=sessionStorage.getItem(VIEW); if(id && db.stacks.some(s=>s.id===id)) openStackView(id); else render()}
+function backHome(){sessionStorage.removeItem(VIEW); closeModal(); location.hash=''; render(); window.scrollTo({top:0,behavior:'instant'})}
 
 function save(){localStorage.setItem(KEY,JSON.stringify(db));render();}
 function toast(s){let e=document.getElementById('toast');e.textContent=s;e.style.display='block';setTimeout(()=>e.style.display='none',1800)}
-function closeModal(){document.getElementById('modal').classList.remove('show');current=null;sessionStorage.removeItem(KEY+'_current')}
+function closeModal(){document.getElementById('modal').classList.remove('show');current=null}
 function show(html){document.getElementById('sheet').innerHTML=html;document.getElementById('modal').classList.add('show')}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function calc(s){let used=s.entries.reduce((a,e)=>a+Number(e.bags||0),0);let wt=s.entries.reduce((a,e)=>a+Number(e.bags||0)*Number(e.moisture||0),0);let imc=used?wt/used:0;return {used,remaining:Number(s.total)-used,imc,diff:imc-Number(s.rmc)}}
 function openStack(id=null){
  let s=id?db.stacks.find(x=>x.id===id):null;
- show(`<div class="mhead"><button class="ghost" onclick="${s?`openStackView('${s.id}')`:'closeModal()'}">← BACK</button><b>${s?'✏️ EDIT STACK':'➕ ADD STACK'}</b><button class="x" onclick="${s?`openStackView('${s.id}')`:'closeModal()'}">×</button></div>
+ show(`<div class="mhead"><button class="ghost" onclick="backHome()">← BACK</button><b>${s?'✏️ EDIT STACK':'➕ ADD STACK'}</b><button class="x" onclick="backHome()">×</button></div>
  <div class="grid">
  <div class="field"><label>STACK NUMBER</label><input id="fstack" value="${esc(s?.stack||'')}"></div>
  <div class="field"><label>TOTAL BAGS</label><input id="ftotal" type="number" inputmode="numeric" value="${s?.total??''}"></div>
@@ -79,18 +83,18 @@ function deleteStack(id){
  db.stacks=db.stacks.filter(s=>s.id!==id);save();toast('Stack deleted');
 }
 function openStackView(id){
- current=id;sessionStorage.setItem(KEY+'_current',id);
+ current=id; sessionStorage.setItem(VIEW,id); location.hash='stack-'+id;
  let s=db.stacks.find(x=>x.id===id);
  let c=calc(s);
  document.getElementById('modal').classList.remove('show');
  document.getElementById('sheet').innerHTML='';
  const main=document.querySelector('main');
  main.innerHTML=`<div class="card">
-   <div class="mhead"><button class="ghost" onclick="render()">← BACK</button><b>💧 ${esc(s.stack)} — ${esc(s.commodity)}</b><button class="ghost" onclick="openStack('${s.id}')">✏️</button></div>
+   <div class="mhead"><button class="ghost" onclick="backHome()">← BACK</button><b>💧 ${esc(s.stack)} — ${esc(s.commodity)}</b><button class="ghost" onclick="openStack('${s.id}')">✏️</button></div>
    <div class="summary"><div class="sum">STACK<b>${esc(s.stack)}</b></div><div class="sum">RMC<b>${Number(s.rmc).toFixed(2)}%</b></div><div class="sum">REMAINING<b>${c.remaining}</b></div></div>
-   <button class="primary wide" onclick="openMoisture('${s.id}')">💧 MOISTURE UPDATE</button>
+   <button class="primary wide" onclick="openMoisture('${s.id}')">💧 UPDATE MOISTURE</button>
  </div>
- <div class="card"><div class="section">SAVED MOISTURE ENTRY <span class="count">${s.entries.length}</span></div>
+ <div class="card"><div class="section">SAVED MOISTURE ENTRIES <span class="count">${s.entries.length}</span></div>
    <div class="entries">${entriesHtml(s)}</div>
    <button class="primary wide complete" ${c.remaining<=50&&c.remaining>=-100?'':'disabled'} onclick="completeStack('${s.id}')">✅ COMPLETE STACK</button>
    <div class="under">Complete allowed only when Remaining Bags is between <b>50 and -100</b>.</div>
@@ -115,10 +119,9 @@ function openMoisture(id,idx=null){
  show(`<div class="mhead"><button class="ghost" onclick="openStackView('${id}')">← BACK</button><b>💧 ${e?'EDIT':'UPDATE'} MOISTURE</b><button class="x" onclick="openStackView('${id}')">×</button></div>
  <div class="summary"><div class="sum">STACK<b>${esc(s.stack)}</b></div><div class="sum">RMC<b>${s.rmc.toFixed(2)}%</b></div><div class="sum">REMAINING<b id="rem">${c.remaining}</b></div></div>
  <div class="field"><label>TRUCK NUMBER (OPTIONAL)</label><input id="mtruck" value="${esc(e?.truck||'')}" placeholder="Optional"></div>
- <div class="grid" style="margin-top:8px"><div class="field"><label>UPDATE BAGS</label><input id="mbags" type="number" inputmode="numeric" value="${e?.bags??''}" oninput="preview('${id}',${idx==null?'null':idx})"></div><div class="field"><label>MOISTURE %</label><input id="mmoist" type="number" step="0.01" inputmode="decimal" value="${e?.moisture??''}" oninput="preview('${id}',${idx==null?'null':idx})"></div></div>
+ <div class="grid moistgrid" style="margin-top:8px"><div class="field"><label>UPDATE BAGS</label><input id="mbags" type="number" inputmode="numeric" value="${e?.bags??''}" oninput="preview('${id}',${idx==null?'null':idx})"></div><div class="field"><label>MOISTURE %</label><input id="mmoist" type="number" step="0.01" inputmode="decimal" value="${e?.moisture??''}" oninput="preview('${id}',${idx==null?'null':idx})"></div></div>
  <div id="mdiff" class="diff" style="margin-top:8px">DIFFERENCE PROJECTION: —</div>
- <div class="under" style="margin-top:8px;text-align:center">Slip: <b style="color:#087b35">YES</b> (default)</div>
- <button class="primary wide" style="margin-top:8px" onclick="saveMoisture('${id}',${idx==null?'null':idx})">💾 SAVE UPDATE</button>`);
+ <button class="primary wide" style="margin-top:10px" onclick="saveMoisture('${id}',${idx==null?'null':idx})">💾 SAVE UPDATE</button>`);
  preview(id,idx);
 }
 function preview(id,idx){
@@ -128,7 +131,7 @@ function preview(id,idx){
  d.textContent='Difference Projection: '+(c.diff>=0?'+':'')+c.diff.toFixed(2)+'%';d.className='diff '+(c.diff>0?'pos':c.diff<0?'neg':'');
 }
 function saveMoisture(id,idx){
- let s=db.stacks.find(x=>x.id===id), bags=Number(document.getElementById('mbags').value), m=Number(document.getElementById('mmoist').value), truck=document.getElementById('mtruck').value.trim(), slip=true;
+ let s=db.stacks.find(x=>x.id===id), bags=Number(document.getElementById('mbags').value), m=Number(document.getElementById('mmoist').value), truck=document.getElementById('mtruck').value.trim(), slip=idx==null ? true : (s.entries[idx]?.slip!==false);
  let max=s.commodity==='Wheat'?14:15;if(!bags||bags<0||m<0||m>max){alert(`${s.commodity} maximum moisture is ${max}%`);return}
  let e={bags,moisture:m,truck,slip,date:new Date().toISOString()};if(idx==null)s.entries.push(e);else s.entries[idx]=e;save();openStackView(id);toast('Moisture saved');
 }
@@ -149,10 +152,9 @@ function render(){
  u.innerHTML=db.stacks.length?db.stacks.map(s=>{let c=calc(s);return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">Total ${s.total} | Updated ${c.used} | Remaining <b>${c.remaining}</b> | RMC ${Number(s.rmc).toFixed(2)}%</div></div><div class="actions"><button class="ghost" onclick="openStackView('${s.id}')">OPEN</button><button class="danger" onclick="deleteStack('${s.id}')">DELETE</button></div></div>`}).join(''):'<div class="empty">No Under Issue Stack</div>';
  h.innerHTML=db.history.length?db.history.map(s=>{let c=calc(s);return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">Total ${s.total} | Remaining ${s.remaining} | RMC ${Number(s.rmc).toFixed(2)}% | Entries ${s.entries.length}</div></div><span class="badge">COMPLETED</span></div>`}).join(''):'<div class="empty">No History</div>';
 }
-function login(){if(document.getElementById('loginpin').value===PIN){sessionStorage.setItem(KEY+'_unlocked','1');document.getElementById('login').style.display='none';render()}else alert('Wrong PIN')}
+function login(){if(document.getElementById('loginpin').value===PIN){unlock();document.getElementById('login').style.display='none';restoreView()}else alert('Wrong PIN')}
+function init(){if(isUnlocked()){document.getElementById('login').style.display='none';restoreView()}else{document.getElementById('login').style.display='flex';render()}}
 document.getElementById('loginpin').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
-if(sessionStorage.getItem(KEY+'_unlocked')==='1'){document.getElementById('login').style.display='none';}
-render();
-if(sessionStorage.getItem(KEY+'_unlocked')==='1' && current && db.stacks.some(x=>x.id===current)){openStackView(current)}
+init();
 </script>
 </body></html>
