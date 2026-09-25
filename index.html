@@ -47,9 +47,9 @@ let db=JSON.parse(localStorage.getItem(KEY)||'{"stacks":[],"history":[]}'), curr
 function isUnlocked(){return sessionStorage.getItem(SESSION)==='1'}
 function unlock(){sessionStorage.setItem(SESSION,'1')}
 function restoreView(){const id=sessionStorage.getItem(VIEW); if(id && db.stacks.some(s=>s.id===id)) openStackView(id); else render()}
-function backHome(){sessionStorage.removeItem(VIEW); closeModal(); location.hash=''; render(); window.scrollTo({top:0,behavior:'instant'})}
+function backHome(){sessionStorage.removeItem(VIEW); closeModal(); if(location.hash) history.replaceState(null,'',location.pathname+location.search); render(); window.scrollTo({top:0,behavior:'instant'});}
 
-function save(){localStorage.setItem(KEY,JSON.stringify(db));render();}
+function save(){localStorage.setItem(KEY,JSON.stringify(db));}
 function toast(s){let e=document.getElementById('toast');e.textContent=s;e.style.display='block';setTimeout(()=>e.style.display='none',1800)}
 function closeModal(){document.getElementById('modal').classList.remove('show');current=null}
 function show(html){document.getElementById('sheet').innerHTML=html;document.getElementById('modal').classList.add('show')}
@@ -83,6 +83,7 @@ function deleteStack(id){
  db.stacks=db.stacks.filter(s=>s.id!==id);save();toast('Stack deleted');
 }
 function openStackView(id){
+ const s0=db.stacks.find(x=>x.id===id); if(!s0){backHome();return;}
  current=id; sessionStorage.setItem(VIEW,id); location.hash='stack-'+id;
  let s=db.stacks.find(x=>x.id===id);
  let c=calc(s);
@@ -137,7 +138,13 @@ function saveMoisture(id,idx){
 }
 function editEntry(id,i){openMoisture(id,i)}
 function deleteEntry(id,i){if(!confirm('Delete this moisture entry?'))return;db.stacks.find(s=>s.id===id).entries.splice(i,1);save();openStackView(id)}
-function toggleSlip(id,i){let s=db.stacks.find(x=>x.id===id);s.entries[i].slip=!s.entries[i].slip;save();openStackView(id)}
+function toggleSlip(id,i){
+ let s=db.stacks.find(x=>x.id===id); if(!s||!s.entries[i])return;
+ s.entries[i].slip = s.entries[i].slip===true ? false : true;
+ save();
+ toast(s.entries[i].slip?'Slip: YES':'Slip: NO');
+ openStackView(id);
+}
 function completeStack(id){
  let s=db.stacks.find(x=>x.id===id), c=calc(s);if(!(c.remaining<=50&&c.remaining>=-100))return;
  if(!confirm(`Complete stack ${s.stack} and move it to History?`))return;
@@ -153,6 +160,10 @@ function render(){
  h.innerHTML=db.history.length?db.history.map(s=>{let c=calc(s);return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">Total ${s.total} | Remaining ${s.remaining} | RMC ${Number(s.rmc).toFixed(2)}% | Entries ${s.entries.length}</div></div><span class="badge">COMPLETED</span></div>`}).join(''):'<div class="empty">No History</div>';
 }
 function login(){if(document.getElementById('loginpin').value===PIN){unlock();document.getElementById('login').style.display='none';restoreView()}else alert('Wrong PIN')}
+window.addEventListener('popstate',()=>{if(isUnlocked()){sessionStorage.removeItem(VIEW);closeModal();render()}});
+window.addEventListener('hashchange',()=>{if(isUnlocked() && !location.hash){sessionStorage.removeItem(VIEW);closeModal();render()}});
+window.addEventListener('popstate',()=>{if(isUnlocked()){sessionStorage.removeItem(VIEW);closeModal();render()}});
+window.addEventListener('hashchange',()=>{if(isUnlocked() && !location.hash){sessionStorage.removeItem(VIEW);closeModal();render()}});
 function init(){if(isUnlocked()){document.getElementById('login').style.display='none';restoreView()}else{document.getElementById('login').style.display='flex';render()}}
 document.getElementById('loginpin').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
 init();
