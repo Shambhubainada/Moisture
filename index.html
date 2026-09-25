@@ -107,6 +107,22 @@ function openStackView(id){
  wrap.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
+function openHistoryDetails(id){
+ const s=db.history.find(x=>x.id===id); if(!s){render();return;}
+ current=null; sessionStorage.removeItem(VIEW); location.hash='history-details-'+id;
+ closeModal(); render();
+ const c=calc(s), main=document.querySelector('main');
+ const old=document.getElementById('selectedStackView'); if(old)old.remove();
+ const wrap=document.createElement('div'); wrap.id='selectedStackView';
+ const diffColor=c.diff<0?'#c62828':'#087b35';
+ const hasTruck=s.entries.some(e=>String(e.truck||'').trim()!=='');
+ const rows=s.entries.length?s.entries.map((e,i)=>`<div class="entry ${s.commodity==='Wheat'?'saved-wheat':'saved-rice'}${hasTruck?' has-truck':' no-truck'}"><span>${i+1}</span>${hasTruck?`<span>${esc(e.truck||'')}</span>`:''}<span>${e.bags}</span><span>${Number(e.moisture).toFixed(2)}%</span><span>${e.slip?'<b style="color:#087b35">YES</b>':'<b style="color:#c62828">NO</b>'}</span></div>`).join(''):'<div class="empty">No moisture entry saved.</div>';
+ const head=`<div class="entry${hasTruck?' has-truck':' no-truck'} entryhead"><span>#</span>${hasTruck?'<span>Truck</span>':''}<span>Bags</span><span>Moist.</span><span>Slip</span></div>`;
+ wrap.innerHTML=`<div class="card"><div class="mhead"><button class="ghost" onclick="render();window.scrollTo({top:0,behavior:'instant'})">← BACK</button><b>📋 COMPLETED STACK DETAILS</b><span class="badge">COMPLETED</span></div><div class="summary"><div class="sum">STACK<b>${esc(s.stack)}</b></div><div class="sum">${esc(s.commodity)}<b>${s.entries.length} ENTRIES</b></div></div><div class="summary"><div class="sum">TOTAL BAGS<b>${s.total}</b></div><div class="sum">UPDATED BAGS<b>${c.used}</b></div><div class="sum">REMAINING<b>${s.remaining}</b></div></div><div class="summary"><div class="sum">RMC<b>${Number(s.rmc).toFixed(2)}%</b></div><div class="sum">CURRENT IMC<b>${c.imc.toFixed(2)}%</b></div><div class="sum">DIFFERENCE<b style="color:${diffColor}">${c.diff>=0?'+':''}${c.diff.toFixed(2)}%</b></div></div></div><div class="card"><div class="section">SAVED MOISTURE ENTRIES <span class="count">${s.entries.length}</span></div><div class="entries">${head}${rows}</div></div>`;
+ const underCard=document.getElementById('under')?.closest('.card'); if(underCard)underCard.insertAdjacentElement('afterend',wrap); else main.appendChild(wrap);
+ wrap.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
 function openStackDetails(id){
  const s=db.stacks.find(x=>x.id===id); if(!s){backHome();return;}
  current=id; sessionStorage.setItem(VIEW,id); location.hash='details-'+id;
@@ -183,7 +199,7 @@ function render(){
  let u=document.getElementById('under'),h=document.getElementById('history');document.getElementById('ucount').textContent=db.stacks.length;
  u.innerHTML=db.stacks.length?db.stacks.map(s=>{let c=calc(s);return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">Total ${s.total} | Updated ${c.used} | Remaining <b>${c.remaining}</b> | RMC ${Number(s.rmc).toFixed(2)}%</div></div><div class="actions"><button class="ghost" onclick="openStackView('${s.id}')">OPEN</button><button class="danger" onclick="deleteStack('${s.id}')">DELETE</button></div></div>`}).join(''):'<div class="empty">No Under Issue Stack</div>';
  const all=document.getElementById('savedAll'); if(all) all.innerHTML='';
- h.innerHTML=db.history.length?db.history.map(s=>{let c=calc(s);return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">Total ${s.total} | Remaining ${s.remaining} | RMC ${Number(s.rmc).toFixed(2)}% | Entries ${s.entries.length}</div></div><span class="badge">COMPLETED</span></div>`}).join(''):'<div class="empty">No History</div>';
+ h.innerHTML=db.history.length?db.history.map(s=>{let c=calc(s);return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">Total ${s.total} | Remaining ${s.remaining} | RMC ${Number(s.rmc).toFixed(2)}% | Entries ${s.entries.length}</div></div><div class="actions"><span class="badge">COMPLETED</span><button class="ghost" onclick="openHistoryDetails('${s.id}')">📋 DETAILS</button></div></div>`}).join(''):'<div class="empty">No History</div>';
 }
 function login(){if(document.getElementById('loginpin').value===PIN){unlock();document.getElementById('login').style.display='none';restoreView()}else alert('Wrong PIN')}
 window.addEventListener('popstate',()=>{if(isUnlocked()){sessionStorage.removeItem(VIEW);closeModal();render()}});
