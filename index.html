@@ -20,12 +20,12 @@ button{font:inherit;font-weight:800;border:0;border-radius:11px;padding:10px 13p
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.moistgrid{grid-template-columns:1fr 1fr;gap:5px}.moistgrid .field input{padding:9px;font-size:15px}.field label{display:block;font-size:12px;font-weight:800;color:var(--mut);margin-bottom:4px}.field input,.field select{width:100%;padding:11px;border:1px solid #cbd8d0;border-radius:10px;font-size:16px;background:#fff}
 .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:7px 0}.sum{background:var(--gl);border-radius:10px;padding:7px;text-align:center;font-size:12px}.sum b{display:block;font-size:15px}
 .diff{font-weight:900;font-size:15px;padding:9px;border-radius:10px;text-align:center;background:#f1f4f2}.pos{color:#087b35;background:#eaf7ee}.neg{color:var(--r);background:#fff0f0}
-.entries{overflow-x:auto}.entry{min-width:0;display:grid;grid-template-columns:25px 1.05fr .7fr .65fr .9fr;gap:2px;align-items:center;border-bottom:1px solid var(--line);padding:5px 1px;font-size:11px}.entry.has-truck{grid-template-columns:22px .95fr .62fr .62fr .75fr .9fr}.entry.no-truck{grid-template-columns:22px .72fr .62fr .62fr .9fr}.entry button{white-space:nowrap}.entryhead{font-size:10px}.entryhead{font-weight:900;background:#f5f8f6}.under{font-size:12px;padding:7px 0;color:var(--mut)}.complete{margin-top:9px}.complete:disabled{opacity:.45}
+.entries{overflow-x:auto}.entry{min-width:0;background:#f8fbf9;border:1px solid #dfeae4;border-radius:8px;margin:4px 0;display:grid;grid-template-columns:25px 1.05fr .7fr .65fr .9fr;gap:2px;align-items:center;border-bottom:1px solid var(--line);padding:5px 1px;font-size:11px}.entry.has-truck{grid-template-columns:22px .95fr .62fr .62fr .75fr .9fr}.entry.no-truck{grid-template-columns:22px .72fr .62fr .62fr .9fr}.entry button{white-space:nowrap}.entryhead{font-size:10px}.entryhead{font-weight:900;background:#eef5f1;border:0;border-radius:5px;margin:2px 0}.saved-list .entry{box-shadow:0 1px 2px rgba(0,0,0,.04)}.under{font-size:12px;padding:7px 0;color:var(--mut)}.complete{margin-top:9px}.complete:disabled{opacity:.45}
 .login{position:fixed;inset:0;background:#eef7f0;display:flex;align-items:center;justify-content:center;padding:18px;z-index:50}.loginbox{width:min(380px,100%);background:white;border-radius:20px;padding:20px;text-align:center;border:1px solid var(--line)}.loginbox input{width:100%;padding:13px;font-size:20px;text-align:center;letter-spacing:5px;border:1px solid var(--line);border-radius:12px;margin:10px 0}
 .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#173126;color:#fff;padding:9px 13px;border-radius:999px;display:none;z-index:80;font-size:13px}
 @media(max-width:520px){header{padding-top:6px}.brand{font-size:18px}.title{font-size:16px}.truck{font-size:42px}.fci{width:42px;height:42px}.visual{height:47px}.grid{grid-template-columns:1fr 1fr}.sheet{margin-top:5px;padding:11px}.summary{gap:4px}.sum{padding:6px 3px}.stack{padding:8px}.actions button{padding:7px 8px}}
 @media(max-width:360px){.stack{grid-template-columns:1fr}.actions{justify-content:flex-end}.grid{grid-template-columns:1fr}.moistgrid{grid-template-columns:1fr 1fr}.summary{grid-template-columns:repeat(3,1fr)}}
-</style>
+.saved-wheat{background:#fff8dc;border-color:#ead79a}.saved-rice{background:#eaf5ff;border-color:#b9d9ef}.saved-wheat span,.saved-rice span{min-width:0}.saved-wheat button,.saved-rice button{font-size:10px!important;padding:3px 6px!important}</style>
 </head>
 <body>
 <header>
@@ -34,6 +34,7 @@ button{font:inherit;font-weight:800;border:0;border-radius:11px;padding:10px 13p
 <main>
   <div class="card"><button class="primary wide" onclick="openStack()">➕ ADD STACK</button></div>
   <div class="card"><div class="section">UNDER ISSUE STACK <span class="count" id="ucount">0</span></div><div id="under"></div></div>
+  <div class="card"><div class="section">SAVED MOISTURE ENTRY <span class="count" id="ecount">0</span></div><div id="savedAll"></div></div>
   <div class="card"><div class="section">HISTORY <button class="danger" onclick="pinAction('history')">🗑 CLEAR HISTORY</button></div><div id="history"></div></div>
 </main>
 
@@ -118,7 +119,7 @@ function entriesHtml(s){
    let slip=e.slip
      ? '<span style="background:#e8f7ed;color:#087b35;font-weight:900;padding:4px 7px;border-radius:7px">YES</span>'
      : '<span style="background:#fff0f0;color:#c62828;font-weight:900;padding:4px 7px;border-radius:7px">NO</span>';
-   return `<div class="entry${cols}"><span>${i+1}</span>${hasTruck?`<span>${esc(e.truck||'')}</span>`:''}<span>${e.bags}</span><span>${Number(e.moisture).toFixed(2)}%</span><span><button class="ghost" style="padding:4px 7px;font-size:11px" onclick="toggleSlip('${s.id}',${i})">${slip}</button></span><span><button class="ghost" style="padding:4px 7px;font-size:11px" onclick="editEntry('${s.id}',${i})">EDIT</button> <button class="danger" style="padding:4px 7px;font-size:11px" onclick="deleteEntry('${s.id}',${i})">DEL</button></span></div><div class="under">RMC ${s.rmc.toFixed(2)}% | IMC ${c.imc.toFixed(2)}% | Difference <b style="color:${c.diff<0?'#c62828':'#087b35'}">${c.diff>=0?'+':''}${c.diff.toFixed(2)}%</b></div>`;
+   const rowClass=s.commodity==='Wheat'?'saved-wheat':'saved-rice'; return `<div class="entry ${rowClass}${cols}"><span>${i+1}</span>${hasTruck?`<span>${esc(e.truck||'')}</span>`:''}<span>${e.bags}</span><span>${Number(e.moisture).toFixed(2)}%</span><span><button class="ghost" style="padding:4px 7px;font-size:11px" onclick="toggleSlip('${s.id}',${i})">${slip}</button></span><span><button class="ghost" style="padding:4px 7px;font-size:11px" onclick="editEntry('${s.id}',${i})">EDIT</button> <button class="danger" style="padding:4px 7px;font-size:11px" onclick="deleteEntry('${s.id}',${i})">DEL</button></span></div><div class="under">RMC ${s.rmc.toFixed(2)}% | IMC ${c.imc.toFixed(2)}% | Difference <b style="color:${c.diff<0?'#c62828':'#087b35'}">${c.diff>=0?'+':''}${c.diff.toFixed(2)}%</b></div>`;
  }).join('');
  return head+rows;
 }
@@ -163,8 +164,11 @@ function pinAction(type){
 }
 function render(){
  document.getElementById("selectedStackView")?.remove();
- let u=document.getElementById('under'),h=document.getElementById('history');document.getElementById('ucount').textContent=db.stacks.length;
+ let u=document.getElementById('under'),h=document.getElementById('history'),all=document.getElementById('savedAll');document.getElementById('ucount').textContent=db.stacks.length;
  u.innerHTML=db.stacks.length?db.stacks.map(s=>{let c=calc(s);return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">Total ${s.total} | Updated ${c.used} | Remaining <b>${c.remaining}</b> | RMC ${Number(s.rmc).toFixed(2)}%</div></div><div class="actions"><button class="ghost" onclick="openStackView('${s.id}')">OPEN</button><button class="danger" onclick="deleteStack('${s.id}')">DELETE</button></div></div>`}).join(''):'<div class="empty">No Under Issue Stack</div>';
+ const saved=[];db.stacks.forEach(s=>s.entries.forEach((e,i)=>saved.push({s,e,i})));
+ document.getElementById('ecount').textContent=saved.length;
+ all.innerHTML=saved.length?saved.map(x=>{const s=x.s,e=x.e;const slip=e.slip!==false;return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}" style="grid-template-columns:1fr auto;"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">#${x.i+1} &nbsp; Bags ${e.bags} &nbsp; Moisture ${Number(e.moisture).toFixed(2)}%${String(e.truck||'').trim()?` &nbsp; Truck ${esc(e.truck)}`:''}</div></div><button class="ghost" style="padding:5px 8px;font-size:11px" onclick="toggleSlip('${s.id}',${x.i})" >${slip?'YES':'NO'}</button></div>`}).join(''):'<div class="empty">No Saved Moisture Entry</div>';
  h.innerHTML=db.history.length?db.history.map(s=>{let c=calc(s);return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">Total ${s.total} | Remaining ${s.remaining} | RMC ${Number(s.rmc).toFixed(2)}% | Entries ${s.entries.length}</div></div><span class="badge">COMPLETED</span></div>`}).join(''):'<div class="empty">No History</div>';
 }
 function login(){if(document.getElementById('loginpin').value===PIN){unlock();document.getElementById('login').style.display='none';restoreView()}else alert('Wrong PIN')}
