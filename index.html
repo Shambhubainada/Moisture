@@ -7,9 +7,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="FSD Sabarmati">
-<link rel="icon" type="image/png" sizes="48x48" href="icons/app-shortcut-v25-48.png">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/app-shortcut-v25-180.png">
-<title>FSD Sabarmati Truck Wise Moisture</title><link rel="manifest" href="manifest.json?v=25"><link rel="icon" type="image/png" sizes="192x192" href="icons/app-shortcut-v25-192.png"><link rel="apple-touch-icon" href="icons/app-shortcut-v25-192.png">
+<link rel="icon" type="image/png" sizes="48x48" href="shortcut-sticker-2-48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="shortcut-sticker-2-180.png">
+<title>FSD Sabarmati Truck Wise Moisture</title><link rel="manifest" href="manifest.json?v=26"><link rel="icon" type="image/png" sizes="192x192" href="shortcut-sticker-2-192.png"><link rel="apple-touch-icon" href="shortcut-sticker-2-192.png">
 <style>
 :root{--g:#176b3a;--gl:#eaf6ee;--r:#c62828;--b:#1565c0;--ink:#193126;--mut:#68756d;--line:#dbe6df}
 *{box-sizing:border-box}body{margin:0;background:#f4f7f5;color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,Arial,sans-serif}
@@ -21,10 +21,10 @@ button{font:inherit;font-weight:800;border:0;border-radius:11px;padding:10px 13p
 .stack{display:grid;grid-template-columns:1fr auto;gap:5px;align-items:center;padding:7px 8px;border:1px solid var(--line);border-radius:10px;margin:4px 0}.stack.w{background:#fff8d9;border-left:6px solid #d0a400}.stack.r{background:#eaf5ff;border-left:6px solid #2385c7}.stack.w{border-left:6px solid #d0a400}.stack.r{border-left:6px solid #2385c7}.stackname{font-weight:900}.meta{font-size:12px;color:var(--mut);margin-top:2px}.actions{display:flex;gap:4px;align-items:center}.actions button{padding:5px 7px;font-size:10px;border-radius:7px}.under .stack{padding:5px 6px;margin:3px 0;border-radius:8px}.under .stackname{font-size:12px}.under .meta{font-size:10px;line-height:1.25}.under .actions button{padding:3px 5px;font-size:8px;border-radius:5px}.under .stack{grid-template-columns:minmax(0,1fr) auto;gap:3px;padding:3px 4px;min-height:0}.under .stackname{font-size:11px}.under .meta{font-size:9px;line-height:1.15}.under .actions{gap:2px}.under-summary{display:flex;flex-wrap:nowrap;gap:4px;margin-top:1px;font-size:8.5px;line-height:1.05;align-items:center;white-space:nowrap}.under-summary span{white-space:nowrap}.under .actions{align-self:center}.under .actions button{min-width:42px}
 .modal{position:fixed;inset:0;background:#0008;display:none;align-items:flex-start;justify-content:center;padding:8px;z-index:30;overflow:auto}.modal.show{display:flex}.sheet{width:min(520px,100%);background:#fff;border-radius:17px;padding:13px;margin-top:max(8px,env(safe-area-inset-top));max-height:calc(100dvh - 16px);overflow:auto;box-shadow:0 12px 35px #0005}
 .mhead{display:flex;justify-content:space-between;align-items:center;font-weight:900;margin-bottom:8px;gap:6px}.mhead b{flex:1;text-align:center}.x{font-size:22px;background:#f2f4f2;padding:3px 9px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.moistgrid{grid-template-columns:1fr 1fr;gap:5px}.moistgrid .field input{padding:9px;font-size:15px}.field label{display:block;font-size:12px;font-weight:800;color:var(--mut);margin-bottom:4px}.field input,.field select{width:100%;padding:11px;border:1px solid #cbd8d0;border-radius:10px;font-size:16px;background:#fff}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.moistgrid{grid-template-columns:1fr 1fr;gap:5px}.moistgrid .field input{padding:9px;font-size:15px}.field label{display:block;font-size:12px;font-weight:800;color:var(--mut);margin-bottom:4px}.field input,.field select{width:100%;padding:11px;border:1px solid #cbd8d0;border-radius:10px;font-size:16px;background:#fff}.commodity-toggle{width:100%;padding:11px;border-radius:10px;font-size:15px;font-weight:900;border:1px solid #cbd8d0;cursor:pointer}.commodity-toggle.rice{background:#eaf5ff;color:#1565a8;border-color:#b9d9ef}.commodity-toggle.wheat{background:#fff8dc;color:#8a6500;border-color:#ead79a}
 .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:7px 0}.sum{background:var(--gl);border-radius:10px;padding:7px;text-align:center;font-size:12px}.sum b{display:block;font-size:15px}
 .diff{font-weight:900;font-size:15px;padding:9px;border-radius:10px;text-align:center;background:#f1f4f2}.pos{color:#087b35;background:#eaf7ee}.neg{color:var(--r);background:#fff0f0}
-.entries{overflow-x:auto}.entry{min-width:0;background:#f8fbf9;border:1px solid #dfeae4;border-radius:8px;margin:4px 0;display:grid;grid-template-columns:22px .75fr .6fr .62fr .82fr .72fr;gap:2px;align-items:center;border-bottom:1px solid var(--line);padding:5px 1px;font-size:11px}.entry.has-truck{grid-template-columns:20px .72fr .55fr .55fr .78fr .72fr .72fr}.entry.no-truck{grid-template-columns:20px .62fr .55fr .55fr .78fr .72fr}.entry button{white-space:nowrap}.entryhead{font-size:10px}.entryhead{font-weight:900;background:#eef5f1;border:0;border-radius:5px;margin:2px 0}.saved-list .entry{box-shadow:0 1px 2px rgba(0,0,0,.04)}.under{font-size:12px;padding:7px 0;color:var(--mut)}.stack-moisture-summary{margin-top:7px;padding:8px 9px;background:#f1f7f4;border:1px solid #d9e8e0;border-radius:8px;line-height:1.7;font-size:11px;color:#315246}.complete{margin-top:9px}.complete:disabled{opacity:.45}
+.entries{overflow-x:auto}.entry{min-width:0;background:#f8fbf9;border:1px solid #dfeae4;border-radius:8px;margin:4px 0;display:grid;grid-template-columns:22px .75fr .6fr .62fr .82fr .72fr;gap:2px;align-items:center;border-bottom:1px solid var(--line);padding:5px 1px;font-size:11px}.entry.has-truck{grid-template-columns:20px .72fr .55fr .55fr .78fr .72fr .72fr}.entry.no-truck{grid-template-columns:20px .62fr .55fr .55fr .78fr .72fr}.entry button{white-space:nowrap}.entryhead{font-size:10px}.entryhead{font-weight:900;background:#eef5f1;border:0;border-radius:5px;margin:2px 0}.saved-list .entry{box-shadow:0 1px 2px rgba(0,0,0,.04)}.under{font-size:12px;padding:7px 0;color:var(--mut)}.stack-moisture-summary{margin-top:7px;padding:8px 9px;background:#f1f7f4;border:1px solid #d9e8e0;border-radius:8px;line-height:1.7;font-size:11px;color:#315246}.complete{margin-top:9px}.complete:disabled{opacity:.45}.add-stack-btn{padding:7px 11px;font-size:12px;border-radius:8px}.moist-bags input{background:#eef7ff;border-color:#b9d9ef}.moist-m input{background:#fff8dc;border-color:#ead79a}.rmc-edit input{background:#f1f7f4;border-color:#b9d9c5}
 .login{position:fixed;inset:0;background:#eef7f0;display:flex;align-items:center;justify-content:center;padding:18px;z-index:50}.loginbox{width:min(380px,100%);background:white;border-radius:20px;padding:20px;text-align:center;border:1px solid var(--line)}.loginbox input{width:100%;padding:13px;font-size:20px;text-align:center;letter-spacing:5px;border:1px solid var(--line);border-radius:12px;margin:10px 0}
 .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#173126;color:#fff;padding:9px 13px;border-radius:999px;display:none;z-index:80;font-size:13px}
 @media(max-width:520px){header{padding-top:6px}.brand{font-size:18px}.title{font-size:16px}.truck{font-size:42px}.home-app-icon{width:47px;height:47px;border-radius:12px}.fci{width:42px;height:42px}.visual{height:47px}.grid{grid-template-columns:1fr 1fr}.sheet{margin-top:5px;padding:11px}.summary{gap:4px}.sum{padding:6px 3px}.stack{padding:8px}.actions button{padding:7px 8px}}
@@ -33,10 +33,10 @@ button{font:inherit;font-weight:800;border:0;border-radius:11px;padding:10px 13p
 </head>
 <body>
 <header>
-  <div class="visual"><img class="home-app-icon" src="icons/home-icon-192.png" alt="FSD Sabarmati truck moisture icon"><div><div class="brand">FSD SABARMATI</div><div class="title">TRUCK WISE MOISTURE</div></div><div class="fci">FCI<br>INDIA</div></div>
+  <div class="visual"><img class="home-app-icon" src="home-sticker-1-192.png" alt="FSD Sabarmati truck moisture icon"><div><div class="brand">FSD SABARMATI</div><div class="title">TRUCK WISE MOISTURE</div></div><div class="fci">FCI<br>INDIA</div></div>
 </header>
 <main>
-  <div class="card"><button class="primary wide" onclick="openStack()">➕ ADD STACK</button></div>
+  <div class="card" style="padding:7px 9px"><button class="primary add-stack-btn" onclick="openStack()">➕ ADD STACK</button></div>
   <div class="card"><div class="section">UNDER ISSUE STACK <span class="count" id="ucount">0</span></div><div id="under"></div></div>
   <div class="card"><div class="section">HISTORY <button class="danger" onclick="pinAction('history')">🗑 CLEAR HISTORY</button></div><div id="history"></div></div>
 </main>
@@ -66,8 +66,15 @@ function openStack(id=null){
  <div class="field"><label>STACK NUMBER</label><input id="fstack" value="${esc(s?.stack||'')}"></div>
  <div class="field"><label>TOTAL BAGS</label><input id="ftotal" type="number" inputmode="numeric" value="${s?.total??''}"></div>
  <div class="field"><label>RMC % ${s?'🔐 PIN required to change':''}</label><input id="frmc" type="number" step="0.01" value="${s?.rmc??''}"></div>
- <div class="field"><label>COMMODITY</label><select id="fcom"><option ${s?.commodity==='Rice'||!s?'selected':''}>Rice</option><option ${s?.commodity==='Wheat'?'selected':''}>Wheat</option></select></div>
+ <div class="field"><label>COMMODITY</label><input type="hidden" id="fcom" value="${esc(s?.commodity||'Rice')}"><button type="button" id="commodityToggle" class="commodity-toggle ${s?.commodity==='Wheat'?'wheat':'rice'}" onclick="toggleCommodity()">${s?.commodity==='Wheat'?'🌾 WHEAT':'🍚 RICE'}</button></div>
  </div><div style="margin-top:10px"><button class="primary wide" onclick="saveStack('${s?.id||''}')">${s?'SAVE CHANGES':'ADD STACK'}</button></div>`);
+}
+function toggleCommodity(){
+ const el=document.getElementById('fcom'), btn=document.getElementById('commodityToggle');
+ if(!el||!btn)return;
+ const next=el.value==='Rice'?'Wheat':'Rice'; el.value=next;
+ btn.textContent=next==='Wheat'?'🌾 WHEAT':'🍚 RICE';
+ btn.classList.toggle('wheat',next==='Wheat'); btn.classList.toggle('rice',next==='Rice');
 }
 function saveStack(id){
  let stack=document.getElementById('fstack').value.trim(), total=Number(document.getElementById('ftotal').value), rmc=Number(document.getElementById('frmc').value), com=document.getElementById('fcom').value;
@@ -102,8 +109,7 @@ function openStackView(id){
  const wrap=document.createElement('div');
  wrap.id='selectedStackView';
  wrap.innerHTML=`<div class="card">
-   <div class="mhead"><button class="ghost" onclick="backHome()">← BACK</button><b>💧 ${esc(s.stack)} — ${esc(s.commodity)}</b><button class="ghost" onclick="openStack('${s.id}')">✏️</button></div>
-   <div class="summary"><div class="sum">STACK<b>${esc(s.stack)}</b></div><div class="sum">RMC<b>${Number(s.rmc).toFixed(2)}%</b></div><div class="sum">REMAINING<b>${c.remaining}</b></div></div>
+   <div class="mhead"><button class="ghost" onclick="backHome()">← BACK</button><b>💧 UNDER ISSUE STACK</b><button class="ghost" onclick="openStack('${s.id}')">✏️</button></div>
    <button class="primary wide" onclick="openMoisture('${s.id}')">💧 UPDATE MOISTURE</button>
  </div>
  <div class="card"><div class="section">SAVED MOISTURE ENTRIES <span class="count">${s.entries.length}</span></div>
@@ -175,9 +181,10 @@ function entriesHtml(s){
 function openMoisture(id,idx=null){
  let s=db.stacks.find(x=>x.id===id), e=idx==null?null:s.entries[idx], c=calc(s);
  show(`<div class="mhead"><button class="ghost" onclick="openStackView('${id}')">← BACK</button><b>💧 ${e?'EDIT':'UPDATE'} MOISTURE</b><button class="x" onclick="openStackView('${id}')">×</button></div>
- <div class="summary"><div class="sum">STACK<b>${esc(s.stack)}</b></div><div class="sum">RMC<b>${s.rmc.toFixed(2)}%</b></div><div class="sum">REMAINING<b id="rem">${c.remaining}</b></div></div>
- <div class="field"><label>TRUCK NUMBER (OPTIONAL)</label><input id="mtruck" value="${esc(e?.truck||'')}" placeholder="Optional"></div>
- <div class="grid moistgrid" style="margin-top:8px"><div class="field"><label>UPDATE BAGS</label><input id="mbags" type="number" inputmode="numeric" value="${e?.bags??''}" oninput="preview('${id}',${idx==null?'null':idx})"></div><div class="field"><label>MOISTURE %</label><input id="mmoist" type="number" step="0.01" inputmode="decimal" value="${e?.moisture??''}" oninput="preview('${id}',${idx==null?'null':idx})"></div></div>
+ <div class="summary"><div class="sum">STACK<b>${esc(s.stack)}</b></div><div class="sum">RMC<b id="popupRmc">${Number(s.rmc).toFixed(2)}%</b></div><div class="sum">REMAINING<b id="rem">${c.remaining}</b></div></div>
+ <div class="field rmc-edit"><label>RMC % <span style="color:var(--mut)">🔐 PIN if changed</span></label><input id="mrmc" type="number" step="0.01" inputmode="decimal" value="${Number(s.rmc).toFixed(2)}"></div>
+ <div class="field" style="margin-top:7px"><label>TRUCK NUMBER (OPTIONAL)</label><input id="mtruck" value="${esc(e?.truck||'')}" placeholder="Optional"></div>
+ <div class="grid moistgrid" style="margin-top:8px"><div class="field moist-bags"><label>UPDATE BAGS</label><input id="mbags" type="number" inputmode="numeric" value="${e?.bags??''}" oninput="preview('${id}',${idx==null?'null':idx})"></div><div class="field moist-m"><label>MOISTURE %</label><input id="mmoist" type="number" step="0.01" inputmode="decimal" value="${e?.moisture??''}" oninput="preview('${id}',${idx==null?'null':idx})"></div></div>
  <div id="mdiff" class="diff" style="margin-top:8px">DIFFERENCE PROJECTION: —</div>
  <button class="primary wide" style="margin-top:10px" onclick="saveMoisture('${id}',${idx==null?'null':idx})">💾 SAVE UPDATE</button>`);
  preview(id,idx);
@@ -189,9 +196,12 @@ function preview(id,idx){
  d.textContent='Difference Projection: '+(c.diff>=0?'+':'')+c.diff.toFixed(2)+'%';d.className='diff '+(c.diff>0?'pos':c.diff<0?'neg':'');
 }
 function saveMoisture(id,idx){
- let s=db.stacks.find(x=>x.id===id), bags=Number(document.getElementById('mbags').value), m=Number(document.getElementById('mmoist').value), truck=document.getElementById('mtruck').value.trim(), slip=idx==null ? true : (s.entries[idx]?.slip!==false);
- let max=s.commodity==='Wheat'?14:15;if(!bags||bags<0||m<0||m>max){alert(`${s.commodity} maximum moisture is ${max}%`);return}
- let e={bags,moisture:m,truck,slip,date:new Date().toISOString()};if(idx==null)s.entries.push(e);else s.entries[idx]=e;save();openStackView(id);toast('Moisture saved');
+ let s=db.stacks.find(x=>x.id===id), bags=Number(document.getElementById('mbags').value), m=Number(document.getElementById('mmoist').value), truck=document.getElementById('mtruck').value.trim(), newRmc=Number(document.getElementById('mrmc').value), oldRmc=Number(s.rmc), slip=idx==null ? true : (s.entries[idx]?.slip!==false);
+ let max=s.commodity==='Wheat'?14:15;
+ if(!bags||bags<0||m<0||m>max||!Number.isFinite(newRmc)||newRmc<0){alert(`${s.commodity} maximum moisture is ${max}%`);return}
+ const finish=()=>{s.rmc=newRmc;let e={bags,moisture:m,truck,slip,date:new Date().toISOString()};if(idx==null)s.entries.push(e);else s.entries[idx]=e;save();openStackView(id);toast('Moisture saved')};
+ if(newRmc!==oldRmc){askPin('RMC CHANGE',finish);return}
+ finish();
 }
 function editEntry(id,i){openMoisture(id,i)}
 function deleteEntry(id,i){if(!confirm('Delete this moisture entry?'))return;db.stacks.find(s=>s.id===id).entries.splice(i,1);save();openStackView(id)}
