@@ -20,7 +20,7 @@ button{font:inherit;font-weight:800;border:0;border-radius:11px;padding:10px 13p
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.moistgrid{grid-template-columns:1fr 1fr;gap:5px}.moistgrid .field input{padding:9px;font-size:15px}.field label{display:block;font-size:12px;font-weight:800;color:var(--mut);margin-bottom:4px}.field input,.field select{width:100%;padding:11px;border:1px solid #cbd8d0;border-radius:10px;font-size:16px;background:#fff}
 .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:7px 0}.sum{background:var(--gl);border-radius:10px;padding:7px;text-align:center;font-size:12px}.sum b{display:block;font-size:15px}
 .diff{font-weight:900;font-size:15px;padding:9px;border-radius:10px;text-align:center;background:#f1f4f2}.pos{color:#087b35;background:#eaf7ee}.neg{color:var(--r);background:#fff0f0}
-.entries{overflow-x:auto}.entry{min-width:470px;display:grid;grid-template-columns:32px 1.3fr .7fr .8fr .7fr 1fr;gap:5px;align-items:center;border-bottom:1px solid var(--line);padding:7px 2px;font-size:12px}.entryhead{font-weight:900;background:#f5f8f6}.under{font-size:12px;padding:7px 0;color:var(--mut)}.complete{margin-top:9px}.complete:disabled{opacity:.45}
+.entries{overflow-x:auto}.entry{min-width:470px;display:grid;grid-template-columns:32px 1.3fr .7fr .8fr .7fr 1fr;gap:5px;align-items:center;border-bottom:1px solid var(--line);padding:7px 2px;font-size:12px}.entry.no-truck{grid-template-columns:32px .8fr .8fr .7fr 1fr;min-width:390px}.entryhead{font-weight:900;background:#f5f8f6}.under{font-size:12px;padding:7px 0;color:var(--mut)}.complete{margin-top:9px}.complete:disabled{opacity:.45}
 .login{position:fixed;inset:0;background:#eef7f0;display:flex;align-items:center;justify-content:center;padding:18px;z-index:50}.loginbox{width:min(380px,100%);background:white;border-radius:20px;padding:20px;text-align:center;border:1px solid var(--line)}.loginbox input{width:100%;padding:13px;font-size:20px;text-align:center;letter-spacing:5px;border:1px solid var(--line);border-radius:12px;margin:10px 0}
 .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#173126;color:#fff;padding:9px 13px;border-radius:999px;display:none;z-index:80;font-size:13px}
 @media(max-width:520px){header{padding-top:6px}.brand{font-size:18px}.title{font-size:16px}.truck{font-size:42px}.fci{width:42px;height:42px}.visual{height:47px}.grid{grid-template-columns:1fr 1fr}.sheet{margin-top:5px;padding:11px}.summary{gap:4px}.sum{padding:6px 3px}.stack{padding:8px}.actions button{padding:7px 8px}}
@@ -100,8 +100,7 @@ function openStackView(id){
  </div>
  <div class="card"><div class="section">SAVED MOISTURE ENTRIES <span class="count">${s.entries.length}</span></div>
    <div class="entries">${entriesHtml(s)}</div>
-   <button class="primary wide complete" ${c.remaining<=50&&c.remaining>=-100?'':'disabled'} onclick="completeStack('${s.id}')">✅ COMPLETE STACK</button>
-   <div class="under">Complete allowed only when Remaining Bags is between <b>50 and -100</b>.</div>
+   ${c.remaining<=50&&c.remaining>=-100 ? `<button class="primary wide complete" onclick="completeStack('${s.id}')">✅ COMPLETE STACK</button><div class="under">Complete allowed only when Remaining Bags is between <b>50 and -100</b>.</div>` : ''}
  </div>`;
  const addCard=main.firstElementChild;
  main.insertBefore(wrap,addCard.nextSibling);
@@ -109,7 +108,9 @@ function openStackView(id){
 }
 
 function entriesHtml(s){
- let head='<div class="entry entryhead"><span>#</span><span>Truck</span><span>Bags</span><span>Moist.</span><span>Slip</span><span>Action</span></div>';
+ const hasTruck=s.entries.some(e=>String(e.truck||'').trim()!=='');
+ const cols=hasTruck?' has-truck':' no-truck';
+ let head=`<div class="entry${cols} entryhead"><span>#</span>${hasTruck?'<span>Truck</span>':''}<span>Bags</span><span>Moist.</span><span>Slip</span><span>Action</span></div>`;
  if(!s.entries.length)return head+'<div class="empty">No moisture entry yet.</div>';
  let rows=s.entries.map((e,i)=>{
    let tempEntries=s.entries.slice(0,i+1);
@@ -117,7 +118,7 @@ function entriesHtml(s){
    let slip=e.slip
      ? '<span style="background:#e8f7ed;color:#087b35;font-weight:900;padding:4px 7px;border-radius:7px">YES</span>'
      : '<span style="background:#fff0f0;color:#c62828;font-weight:900;padding:4px 7px;border-radius:7px">NO</span>';
-   return `<div class="entry"><span>${i+1}</span><span>${esc(e.truck||'-')}</span><span>${e.bags}</span><span>${Number(e.moisture).toFixed(2)}%</span><span><button class="ghost" style="padding:4px 7px;font-size:11px" onclick="toggleSlip('${s.id}',${i})">${slip}</button></span><span><button class="ghost" style="padding:4px 7px;font-size:11px" onclick="editEntry('${s.id}',${i})">EDIT</button> <button class="danger" style="padding:4px 7px;font-size:11px" onclick="deleteEntry('${s.id}',${i})">DEL</button></span></div><div class="under">RMC ${s.rmc.toFixed(2)}% | IMC ${c.imc.toFixed(2)}% | Difference <b style="color:${c.diff<0?'#c62828':'#087b35'}">${c.diff>=0?'+':''}${c.diff.toFixed(2)}%</b></div>`;
+   return `<div class="entry${cols}"><span>${i+1}</span>${hasTruck?`<span>${esc(e.truck||'')}</span>`:''}<span>${e.bags}</span><span>${Number(e.moisture).toFixed(2)}%</span><span><button class="ghost" style="padding:4px 7px;font-size:11px" onclick="toggleSlip('${s.id}',${i})">${slip}</button></span><span><button class="ghost" style="padding:4px 7px;font-size:11px" onclick="editEntry('${s.id}',${i})">EDIT</button> <button class="danger" style="padding:4px 7px;font-size:11px" onclick="deleteEntry('${s.id}',${i})">DEL</button></span></div><div class="under">RMC ${s.rmc.toFixed(2)}% | IMC ${c.imc.toFixed(2)}% | Difference <b style="color:${c.diff<0?'#c62828':'#087b35'}">${c.diff>=0?'+':''}${c.diff.toFixed(2)}%</b></div>`;
  }).join('');
  return head+rows;
 }
