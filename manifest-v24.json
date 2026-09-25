@@ -1,0 +1,21 @@
+{
+  "name": "FSD Sabarmati Truck Wise Moisture",
+  "short_name": "FSD Sabarmati",
+  "description": "FSD Sabarmati truck wise moisture monitoring",
+  "id": "./?app=v24",
+  "start_url": "./?app=v24",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#f4f7f5",
+  "theme_color": "#176b3a",
+  "icons": [
+    {"src":"icons/shortcut-icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"icons/shortcut-icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
+    {"src":"icons/shortcut-icon-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
+  ],
+  "shortcuts": [
+    {"name":"FSD Sabarmati Truck Wise Moisture","short_name":"Moisture","url":"./?app=v24","icons":[{"src":"icons/shortcut-icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"icons/shortcut-icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"}]}
+  ]
+}
