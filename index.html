@@ -34,7 +34,6 @@ button{font:inherit;font-weight:800;border:0;border-radius:11px;padding:10px 13p
 <main>
   <div class="card"><button class="primary wide" onclick="openStack()">➕ ADD STACK</button></div>
   <div class="card"><div class="section">UNDER ISSUE STACK <span class="count" id="ucount">0</span></div><div id="under"></div></div>
-  <div class="card"><div class="section">SAVED MOISTURE ENTRY <span class="count" id="ecount">0</span></div><div id="savedAll"></div></div>
   <div class="card"><div class="section">HISTORY <button class="danger" onclick="pinAction('history')">🗑 CLEAR HISTORY</button></div><div id="history"></div></div>
 </main>
 
@@ -103,8 +102,8 @@ function openStackView(id){
    <div class="entries">${entriesHtml(s)}</div>
    ${c.remaining<=50&&c.remaining>=-100 ? `<button class="primary wide complete" onclick="completeStack('${s.id}')">✅ COMPLETE STACK</button><div class="under">Complete allowed only when Remaining Bags is between <b>50 and -100</b>.</div>` : ''}
  </div>`;
- const addCard=main.firstElementChild;
- main.insertBefore(wrap,addCard.nextSibling);
+ const underCard=document.getElementById('under')?.closest('.card');
+ if(underCard) underCard.insertAdjacentElement('afterend',wrap); else main.appendChild(wrap);
  wrap.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
@@ -164,11 +163,9 @@ function pinAction(type){
 }
 function render(){
  document.getElementById("selectedStackView")?.remove();
- let u=document.getElementById('under'),h=document.getElementById('history'),all=document.getElementById('savedAll');document.getElementById('ucount').textContent=db.stacks.length;
+ let u=document.getElementById('under'),h=document.getElementById('history');document.getElementById('ucount').textContent=db.stacks.length;
  u.innerHTML=db.stacks.length?db.stacks.map(s=>{let c=calc(s);return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">Total ${s.total} | Updated ${c.used} | Remaining <b>${c.remaining}</b> | RMC ${Number(s.rmc).toFixed(2)}%</div></div><div class="actions"><button class="ghost" onclick="openStackView('${s.id}')">OPEN</button><button class="danger" onclick="deleteStack('${s.id}')">DELETE</button></div></div>`}).join(''):'<div class="empty">No Under Issue Stack</div>';
- const saved=[];db.stacks.forEach(s=>s.entries.forEach((e,i)=>saved.push({s,e,i})));
- document.getElementById('ecount').textContent=saved.length;
- all.innerHTML=saved.length?saved.map(x=>{const s=x.s,e=x.e;const slip=e.slip!==false;return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}" style="grid-template-columns:1fr auto;"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">#${x.i+1} &nbsp; Bags ${e.bags} &nbsp; Moisture ${Number(e.moisture).toFixed(2)}%${String(e.truck||'').trim()?` &nbsp; Truck ${esc(e.truck)}`:''}</div></div><button class="ghost" style="padding:5px 8px;font-size:11px" onclick="toggleSlip('${s.id}',${x.i})" >${slip?'YES':'NO'}</button></div>`}).join(''):'<div class="empty">No Saved Moisture Entry</div>';
+ const all=document.getElementById('savedAll'); if(all) all.innerHTML='';
  h.innerHTML=db.history.length?db.history.map(s=>{let c=calc(s);return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">Total ${s.total} | Remaining ${s.remaining} | RMC ${Number(s.rmc).toFixed(2)}% | Entries ${s.entries.length}</div></div><span class="badge">COMPLETED</span></div>`}).join(''):'<div class="empty">No History</div>';
 }
 function login(){if(document.getElementById('loginpin').value===PIN){unlock();document.getElementById('login').style.display='none';restoreView()}else alert('Wrong PIN')}
