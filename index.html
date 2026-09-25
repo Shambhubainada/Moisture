@@ -85,12 +85,15 @@ function deleteStack(id){
 function openStackView(id){
  const s0=db.stacks.find(x=>x.id===id); if(!s0){backHome();return;}
  current=id; sessionStorage.setItem(VIEW,id); location.hash='stack-'+id;
- let s=db.stacks.find(x=>x.id===id);
- let c=calc(s);
- document.getElementById('modal').classList.remove('show');
- document.getElementById('sheet').innerHTML='';
+ closeModal();
+ render();
+ const s=db.stacks.find(x=>x.id===id); if(!s)return;
+ const c=calc(s);
  const main=document.querySelector('main');
- main.innerHTML=`<div class="card">
+ const old=document.getElementById('selectedStackView'); if(old)old.remove();
+ const wrap=document.createElement('div');
+ wrap.id='selectedStackView';
+ wrap.innerHTML=`<div class="card">
    <div class="mhead"><button class="ghost" onclick="backHome()">← BACK</button><b>💧 ${esc(s.stack)} — ${esc(s.commodity)}</b><button class="ghost" onclick="openStack('${s.id}')">✏️</button></div>
    <div class="summary"><div class="sum">STACK<b>${esc(s.stack)}</b></div><div class="sum">RMC<b>${Number(s.rmc).toFixed(2)}%</b></div><div class="sum">REMAINING<b>${c.remaining}</b></div></div>
    <button class="primary wide" onclick="openMoisture('${s.id}')">💧 UPDATE MOISTURE</button>
@@ -100,8 +103,11 @@ function openStackView(id){
    <button class="primary wide complete" ${c.remaining<=50&&c.remaining>=-100?'':'disabled'} onclick="completeStack('${s.id}')">✅ COMPLETE STACK</button>
    <div class="under">Complete allowed only when Remaining Bags is between <b>50 and -100</b>.</div>
  </div>`;
- window.scrollTo({top:0,behavior:'instant'});
+ const addCard=main.firstElementChild;
+ main.insertBefore(wrap,addCard.nextSibling);
+ wrap.scrollIntoView({behavior:'smooth',block:'start'});
 }
+
 function entriesHtml(s){
  let head='<div class="entry entryhead"><span>#</span><span>Truck</span><span>Bags</span><span>Moist.</span><span>Slip</span><span>Action</span></div>';
  if(!s.entries.length)return head+'<div class="empty">No moisture entry yet.</div>';
