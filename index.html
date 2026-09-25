@@ -7,9 +7,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="FSD Sabarmati">
-<link rel="icon" type="image/png" sizes="48x48" href="icons/shortcut-icon-48.png">
-<link rel="apple-touch-icon" sizes="180x180" href="icons/shortcut-icon-180.png">
-<title>FSD Sabarmati Truck Wise Moisture</title><link rel="manifest" href="manifest-v24.json"><link rel="icon" type="image/png" sizes="192x192" href="icons/shortcut-icon-192.png"><link rel="apple-touch-icon" href="icons/shortcut-icon-192.png">
+<link rel="icon" type="image/png" sizes="48x48" href="icons/app-shortcut-v25-48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/app-shortcut-v25-180.png">
+<title>FSD Sabarmati Truck Wise Moisture</title><link rel="manifest" href="manifest.json?v=25"><link rel="icon" type="image/png" sizes="192x192" href="icons/app-shortcut-v25-192.png"><link rel="apple-touch-icon" href="icons/app-shortcut-v25-192.png">
 <style>
 :root{--g:#176b3a;--gl:#eaf6ee;--r:#c62828;--b:#1565c0;--ink:#193126;--mut:#68756d;--line:#dbe6df}
 *{box-sizing:border-box}body{margin:0;background:#f4f7f5;color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,Arial,sans-serif}
@@ -126,7 +126,7 @@ function openHistoryDetails(id){
  const hasTruck=s.entries.some(e=>String(e.truck||'').trim()!=='');
  const rows=s.entries.length?s.entries.map((e,i)=>`<div class="entry ${s.commodity==='Wheat'?'saved-wheat':'saved-rice'}${hasTruck?' has-truck':' no-truck'}"><span>${i+1}</span>${hasTruck?`<span>${esc(e.truck||'')}</span>`:''}<span>${e.bags}</span><span>${Number(e.moisture).toFixed(2)}%</span><span style="display:flex;align-items:center;justify-content:center;gap:2px"><span class="slip-pill ${e.slip?'slip-yes':'slip-no'}">${e.slip?'YES':'NO'}</span>${entryDateTime(e)}</span></div>`).join(''):'<div class="empty">No moisture entry saved.</div>';
  const head=`<div class="entry${hasTruck?' has-truck':' no-truck'} entryhead"><span>#</span>${hasTruck?'<span>Truck</span>':''}<span>Bags</span><span>Moist.</span><span>Slip</span></div>`;
- wrap.innerHTML=`<div class="card"><div class="mhead"><button class="ghost" onclick="render();window.scrollTo({top:0,behavior:'instant'})">← BACK</button><b>📋 COMPLETED STACK DETAILS</b><span class="badge">COMPLETED</span></div><div class="summary"><div class="sum">STACK<b>${esc(s.stack)}</b></div><div class="sum">${esc(s.commodity)}<b>${s.entries.length} ENTRIES</b></div></div><div class="summary"><div class="sum">TOTAL BAGS<b>${s.total}</b></div><div class="sum">UPDATED BAGS<b>${c.used}</b></div><div class="sum">REMAINING<b>${s.remaining}</b></div></div><div class="summary"><div class="sum">RMC<b>${Number(s.rmc).toFixed(2)}%</b></div><div class="sum">CURRENT IMC<b>${c.imc.toFixed(2)}%</b></div><div class="sum">DIFFERENCE<b style="color:${diffColor}">${c.diff>=0?'+':''}${c.diff.toFixed(2)}%</b></div></div></div><div class="card"><div class="section">SAVED MOISTURE ENTRIES <span class="count">${s.entries.length}</span></div><div class="entries">${head}${rows}</div></div>`;
+ wrap.innerHTML=`<div class="card"><div class="mhead"><button class="ghost" onclick="render();window.scrollTo({top:0,behavior:'instant'})">← BACK</button><b>📋 COMPLETED STACK DETAILS</b><span class="badge">COMPLETED</span></div><div class="summary"><div class="sum">STACK<b>${esc(s.stack)}</b></div><div class="sum">${esc(s.commodity)}<b>${s.entries.length} ENTRIES</b></div></div><div class="summary"><div class="sum">TOTAL BAGS<b>${s.total}</b></div><div class="sum">UPDATED BAGS<b>${c.used}</b></div><div class="sum">${s.remaining<0?"GP":s.remaining>0?"GR":"BALANCE"}<b>${Math.abs(s.remaining)}</b></div></div><div class="summary"><div class="sum">RMC<b>${Number(s.rmc).toFixed(2)}%</b></div><div class="sum">CURRENT IMC<b>${c.imc.toFixed(2)}%</b></div><div class="sum">DIFFERENCE<b style="color:${diffColor}">${c.diff>=0?'+':''}${c.diff.toFixed(2)}%</b></div></div></div><div class="card"><div class="section">SAVED MOISTURE ENTRIES <span class="count">${s.entries.length}</span></div><div class="entries">${head}${rows}</div></div>`;
  const underCard=document.getElementById('under')?.closest('.card'); if(underCard)underCard.insertAdjacentElement('afterend',wrap); else main.appendChild(wrap);
  wrap.scrollIntoView({behavior:'smooth',block:'start'});
 }
