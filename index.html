@@ -38,7 +38,7 @@ button{font:inherit;font-weight:800;border:0;border-radius:11px;padding:10px 13p
 <main>
   <div class="card" style="padding:7px 9px"><button class="primary add-stack-btn" onclick="openStack()">➕ ADD STACK</button></div>
   <div class="card"><div class="section">UNDER ISSUE STACK <span class="count" id="ucount">0</span></div><div id="under"></div></div>
-  <div class="card"><div class="section">HISTORY <button class="danger" onclick="pinAction('history')">🗑 CLEAR HISTORY</button></div><div id="history"></div></div>
+  <div class="card"><div class="section">HISTORY <button class="danger" style="padding:3px 6px;font-size:9px;line-height:1.1" onclick="pinAction('history')">🗑 CLEAR HISTORY</button></div><div id="history"></div></div>
 </main>
 
 <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
@@ -65,7 +65,7 @@ function openStack(id=null){
  <div class="grid">
  <div class="field"><label>STACK NUMBER</label><input id="fstack" value="${esc(s?.stack||'')}"></div>
  <div class="field"><label>TOTAL BAGS</label><input id="ftotal" type="number" inputmode="numeric" value="${s?.total??''}"></div>
- <div class="field"><label>RMC % ${s?'🔐 PIN required to change':''}</label><input id="frmc" type="number" step="0.01" value="${s?.rmc??''}"></div>
+ <div class="field"><label>RMC % ${s?'🔐 PIN required to change':''}</label><input id="frmc" type="number" min="0" max="15" step="0.01" inputmode="decimal" value="${s?.rmc??''}"></div>
  <div class="field"><label>COMMODITY</label><input type="hidden" id="fcom" value="${esc(s?.commodity||'Rice')}"><button type="button" id="commodityToggle" class="commodity-toggle ${s?.commodity==='Wheat'?'wheat':'rice'}" onclick="toggleCommodity()">${s?.commodity==='Wheat'?'🌾 WHEAT':'🍚 RICE'}</button></div>
  </div><div style="margin-top:10px"><button class="primary wide" onclick="saveStack('${s?.id||''}')">${s?'SAVE CHANGES':'ADD STACK'}</button></div>`);
 }
@@ -78,7 +78,7 @@ function toggleCommodity(){
 }
 function saveStack(id){
  let stack=document.getElementById('fstack').value.trim(), total=Number(document.getElementById('ftotal').value), rmc=Number(document.getElementById('frmc').value), com=document.getElementById('fcom').value;
- if(!stack||!total||rmc<0){toast('Please fill all stack details');return}
+ if(!stack||!total||rmc<0||rmc>15){toast(rmc>15?'RMC cannot be more than 15%':'Please fill all stack details');return}
  if(id){
    let s=db.stacks.find(x=>x.id===id), old=s.rmc;
    if(old!==rmc){ askPin('RMC CHANGE',()=>finishSaveStack(id,stack,total,rmc,com)); return; }
@@ -108,9 +108,8 @@ function openStackView(id){
  const old=document.getElementById('selectedStackView'); if(old)old.remove();
  const wrap=document.createElement('div');
  wrap.id='selectedStackView';
- wrap.innerHTML=`<div class="card">
-   <div class="mhead"><button class="ghost" onclick="backHome()">← BACK</button><b>💧 UNDER ISSUE STACK</b><button class="ghost" onclick="openStack('${s.id}')">✏️</button></div>
-   <button class="primary wide" onclick="openMoisture('${s.id}')">💧 UPDATE MOISTURE</button>
+ wrap.innerHTML=`<div class="card" style="padding:7px 8px">
+   <button class="primary wide" style="margin:0" onclick="openMoisture('${s.id}')">💧 UPDATE MOISTURE</button>
  </div>
  <div class="card"><div class="section">SAVED MOISTURE ENTRIES <span class="count">${s.entries.length}</span></div>
    <div class="entries">${entriesHtml(s)}</div>
@@ -182,7 +181,7 @@ function openMoisture(id,idx=null){
  let s=db.stacks.find(x=>x.id===id), e=idx==null?null:s.entries[idx], c=calc(s);
  show(`<div class="mhead"><button class="ghost" onclick="openStackView('${id}')">← BACK</button><b>💧 ${e?'EDIT':'UPDATE'} MOISTURE</b><button class="x" onclick="openStackView('${id}')">×</button></div>
  <div class="summary"><div class="sum">STACK<b>${esc(s.stack)}</b></div><div class="sum">RMC<b id="popupRmc">${Number(s.rmc).toFixed(2)}%</b></div><div class="sum">REMAINING<b id="rem">${c.remaining}</b></div></div>
- <div class="field rmc-edit"><label>RMC % <span style="color:var(--mut)">🔐 PIN if changed</span></label><input id="mrmc" type="number" step="0.01" inputmode="decimal" value="${Number(s.rmc).toFixed(2)}"></div>
+ <div class="field rmc-edit"><label>RMC % <span style="color:var(--mut)">🔐 PIN if changed</span></label><input id="mrmc" type="number" min="0" max="15" step="0.01" inputmode="decimal" value="${Number(s.rmc).toFixed(2)}"></div>
  <div class="field" style="margin-top:7px"><label>TRUCK NUMBER (OPTIONAL)</label><input id="mtruck" value="${esc(e?.truck||'')}" placeholder="Optional"></div>
  <div class="grid moistgrid" style="margin-top:8px"><div class="field moist-bags"><label>UPDATE BAGS</label><input id="mbags" type="number" inputmode="numeric" value="${e?.bags??''}" oninput="preview('${id}',${idx==null?'null':idx})"></div><div class="field moist-m"><label>MOISTURE %</label><input id="mmoist" type="number" step="0.01" inputmode="decimal" value="${e?.moisture??''}" oninput="preview('${id}',${idx==null?'null':idx})"></div></div>
  <div id="mdiff" class="diff" style="margin-top:8px">DIFFERENCE PROJECTION: —</div>
@@ -198,7 +197,7 @@ function preview(id,idx){
 function saveMoisture(id,idx){
  let s=db.stacks.find(x=>x.id===id), bags=Number(document.getElementById('mbags').value), m=Number(document.getElementById('mmoist').value), truck=document.getElementById('mtruck').value.trim(), newRmc=Number(document.getElementById('mrmc').value), oldRmc=Number(s.rmc), slip=idx==null ? true : (s.entries[idx]?.slip!==false);
  let max=s.commodity==='Wheat'?14:15;
- if(!bags||bags<0||m<0||m>max||!Number.isFinite(newRmc)||newRmc<0){alert(`${s.commodity} maximum moisture is ${max}%`);return}
+ if(!bags||bags<0||m<0||m>max||!Number.isFinite(newRmc)||newRmc<0||newRmc>15){alert(newRmc>15?'RMC cannot be more than 15%':`${s.commodity} maximum moisture is ${max}%`);return}
  const finish=()=>{s.rmc=newRmc;let e={bags,moisture:m,truck,slip,date:new Date().toISOString()};if(idx==null)s.entries.push(e);else s.entries[idx]=e;save();openStackView(id);toast('Moisture saved')};
  if(newRmc!==oldRmc){askPin('RMC CHANGE',finish);return}
  finish();
