@@ -1,48 +1,140 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#197a43"><title>FSD Sabarmati - Truck Wise Moisture</title><style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f7f5;color:#17221b}.hero{height:270px;position:relative;display:flex;align-items:flex-end;padding:20px;color:#fff;background:linear-gradient(180deg,#1d6b3a00 20%,#0a2514d9 100%),url('farming.svg') center/cover}.heroShade{position:absolute;inset:0;background:linear-gradient(135deg,#0c5f3470,transparent 50%,#081c1090)}.heroContent{position:relative;z-index:1}.heroKicker{display:inline-block;background:#ffffff25;border:1px solid #ffffff55;padding:6px 10px;border-radius:20px;font-size:11px;font-weight:800}.hero h1{margin:10px 0 0;font-size:30px;letter-spacing:1px;text-shadow:0 2px 5px #0008}.hero p{margin:4px 0 0;font-size:16px;font-weight:800}.sectionHead{display:flex;justify-content:space-between;align-items:center;gap:8px}.eyebrow{font-size:10px;color:#6b776f;font-weight:800;letter-spacing:1px}.sectionHead h2{margin:2px 0 10px}.localBadge,.countBadge{font-size:10px;font-weight:800;padding:5px 8px;border-radius:15px;background:#e8f5ec;color:#197a43}.countBadge{min-width:28px;text-align:center}.commodityTitle{font-size:12px;font-weight:900;padding:8px 10px;border-radius:8px;margin:5px 0 7px}.wheatTitle{background:#fff3cc;color:#795500}.riceTitle{background:#e5f5ec;color:#11653d}main{max-width:900px;margin:auto;padding:10px}.card{background:#fff;border-radius:14px;padding:14px;margin-bottom:11px;border:1px solid #e2e9e4;box-shadow:0 2px 9px #0001}h2{font-size:17px;margin:0 0 10px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}label{font-size:12px;font-weight:bold;display:block;margin-bottom:4px}input,select,button{width:100%;min-height:42px;border:1px solid #ccd6d0;border-radius:9px;padding:9px;font-size:15px;background:#fff}button{background:#197a43;color:#fff;border:0;font-weight:bold}.danger{background:#dc3545}.secondary{background:#edf3ef;color:#17432d;border:1px solid #d2ded6}.full{grid-column:1/-1}.muted,.small{font-size:12px;color:#66736b}.stack{border:1px solid #dce5df;border-radius:11px;padding:10px;margin:7px 0}.wheat{border-left:5px solid #d69a00}.rice{border-left:5px solid #198754}.top{display:flex;justify-content:space-between;gap:8px}.badge{font-size:11px;font-weight:bold;padding:4px 8px;border-radius:12px;background:#e9f4ed}.wheat .badge{background:#fff0c7}.stackActions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}.table{overflow:auto}table{width:100%;border-collapse:collapse;min-width:720px;font-size:12px}th,td{padding:7px;border-bottom:1px solid #e5ebe7;text-align:left;vertical-align:middle}th{background:#f0f4f1}.pos{color:#148849;font-weight:800}.neg{color:#d32e3b;font-weight:800}.zero{font-weight:800}.entryCalc{background:#f5f8f6;border-radius:7px;padding:7px}.modal{display:none;position:fixed;inset:0;background:#0008;z-index:5;align-items:flex-end;justify-content:center;padding:8px;overflow:hidden}.modal.show{display:flex}.modalTop{display:flex;justify-content:space-between;align-items:center;gap:8px}.modalTop h2{margin:0}.closeBtn{width:38px;min-height:38px;padding:0;font-size:25px;background:#edf3ef;color:#17432d}.stackSheet{max-height:min(88vh,620px)}.sheet{background:#fff;width:100%;max-width:600px;border-radius:18px 18px 0 0;padding:15px;max-height:92vh;overflow:auto}.summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.summary div{background:#f1f5f2;border-radius:8px;padding:8px;text-align:center;font-size:11px}.summary b{display:block;font-size:14px;margin-top:3px}.compact{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}.diff{min-height:42px;border-radius:9px;background:#f1f5f2;padding:10px;text-align:center;font-weight:bold}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}@media(min-width:700px){.modal{align-items:center}.sheet{border-radius:18px}.grid{grid-template-columns:repeat(4,1fr)}}@media(max-width:480px){.hero{height:220px;padding:16px}.hero h1{font-size:25px}.compact{grid-template-columns:1fr 1fr}.diffwrap{grid-column:1/-1}}
-
-@media(max-width:600px){body{padding-bottom:env(safe-area-inset-bottom)}main{padding:7px}.card{padding:10px;border-radius:11px;margin-bottom:8px}.hero{height:205px;padding:13px}.hero h1{font-size:23px}.hero p{font-size:14px}.sectionHead h2{font-size:15px;margin-bottom:4px}.stack{padding:8px;margin:5px 0}.stackActions{grid-template-columns:1.25fr .85fr;gap:5px}.stackActions button,.stack>button{min-height:38px;padding:7px;font-size:12px}.table{margin:0 -2px}table{min-width:0;width:100%;font-size:10px;table-layout:fixed}th,td{padding:5px 3px;word-break:break-word}th:nth-child(1),td:nth-child(1){width:12%}th:nth-child(2),td:nth-child(2){width:22%}th:nth-child(3),td:nth-child(3){width:11%}th:nth-child(4),td:nth-child(4){width:14%}th:nth-child(5),td:nth-child(5){width:10%}th:nth-child(6),td:nth-child(6){width:31%}td button{min-height:31px;padding:5px 3px;font-size:10px}.entryCalc{font-size:10px;padding:5px}.sheet{padding:12px;border-radius:16px 16px 0 0;max-height:82dvh;max-height:82vh;overflow:auto}.summary div{padding:6px 4px}.summary b{font-size:13px}.compact{gap:5px}.compact input,.compact .diff{min-height:39px;padding:7px;font-size:14px}.actions button{min-height:40px}.stackSheet{max-height:70dvh}.grid{gap:6px}.grid input,.grid select,.grid button{min-height:39px;font-size:14px}.modal{padding:5px}.modal .sheet{margin-bottom:0}.addCard button{min-height:42px}}
-@media(max-width:380px){.summary{gap:4px}.summary div{font-size:10px}.summary b{font-size:12px}.compact{grid-template-columns:1fr 1fr}.diffwrap{grid-column:1/-1}.stackActions{grid-template-columns:1fr 1fr}.hero{height:190px}}
-@media(max-height:650px){.modal{align-items:flex-start;padding-top:5dvh}.sheet{max-height:90dvh}.stackSheet{max-height:90dvh}}
-</style></head><body>
-<header class="hero"><div class="heroShade"></div><div class="heroContent"><div class="heroKicker">🌾 FARMING • TRUCK • MOISTURE</div><h1>FSD SABARMATI</h1><p>🚛 TRUCK WISE MOISTURE</p></div></header>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#176b3a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>FSD Sabarmati Truck Wise Moisture</title><link rel="manifest" href="manifest.json">
+<style>
+:root{--g:#176b3a;--gl:#eaf6ee;--r:#c62828;--b:#1565c0;--ink:#193126;--mut:#68756d;--line:#dbe6df}
+*{box-sizing:border-box}body{margin:0;background:#f4f7f5;color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+header{background:linear-gradient(#e8f7ed,#fff);padding:8px 10px 7px;text-align:center;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:4}
+.brand{font-weight:900;font-size:20px;letter-spacing:1px;color:var(--g)}.title{font-weight:900;font-size:18px}.visual{display:flex;justify-content:center;align-items:center;gap:13px;height:55px}.truck{font-size:48px}.fci{width:47px;height:47px;border:2px solid var(--g);border-radius:50%;background:#fff;display:grid;place-items:center;font-size:10px;font-weight:900;color:var(--g)}
+main{max-width:760px;margin:auto;padding:9px}.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:11px;margin:8px 0;box-shadow:0 2px 8px #153d1b0b}
+button{font:inherit;font-weight:800;border:0;border-radius:11px;padding:10px 13px;cursor:pointer}.primary{background:var(--g);color:white}.ghost{background:#fff;border:1px solid var(--line)}.danger{background:#fff0f0;color:var(--r);border:1px solid #efb8b8}.wide{width:100%}
+.section{font-weight:900;display:flex;justify-content:space-between;align-items:center;margin:2px 0 8px}.count{background:var(--gl);color:var(--g);border-radius:999px;padding:3px 8px;font-size:12px}
+.stack{display:grid;grid-template-columns:1fr auto;gap:7px;align-items:center;padding:9px;border:1px solid var(--line);border-radius:12px;margin:6px 0}.stack.w{border-left:6px solid #d0a400}.stack.r{border-left:6px solid #2385c7}.stackname{font-weight:900}.meta{font-size:12px;color:var(--mut);margin-top:2px}.actions{display:flex;gap:5px}.actions button{padding:7px 9px;font-size:12px}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:flex-start;justify-content:center;padding:8px;z-index:30;overflow:auto}.modal.show{display:flex}.sheet{width:min(520px,100%);background:#fff;border-radius:17px;padding:13px;margin-top:max(8px,env(safe-area-inset-top));max-height:calc(100dvh - 16px);overflow:auto;box-shadow:0 12px 35px #0005}
+.mhead{display:flex;justify-content:space-between;align-items:center;font-weight:900;margin-bottom:8px}.x{font-size:22px;background:#f2f4f2;padding:3px 9px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.field label{display:block;font-size:12px;font-weight:800;color:var(--mut);margin-bottom:4px}.field input,.field select{width:100%;padding:11px;border:1px solid #cbd8d0;border-radius:10px;font-size:16px;background:#fff}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:7px 0}.sum{background:var(--gl);border-radius:10px;padding:7px;text-align:center;font-size:12px}.sum b{display:block;font-size:15px}
+.diff{font-weight:900;font-size:15px;padding:9px;border-radius:10px;text-align:center;background:#f1f4f2}.pos{color:#087b35;background:#eaf7ee}.neg{color:var(--r);background:#fff0f0}
+.entries{overflow-x:auto}.entry{min-width:470px;display:grid;grid-template-columns:32px 1.3fr .7fr .8fr .7fr 1fr;gap:5px;align-items:center;border-bottom:1px solid var(--line);padding:7px 2px;font-size:12px}.entryhead{font-weight:900;background:#f5f8f6}.under{font-size:12px;padding:7px 0;color:var(--mut)}.complete{margin-top:9px}.complete:disabled{opacity:.45}
+.login{position:fixed;inset:0;background:#eef7f0;display:flex;align-items:center;justify-content:center;padding:18px;z-index:50}.loginbox{width:min(380px,100%);background:white;border-radius:20px;padding:20px;text-align:center;border:1px solid var(--line)}.loginbox input{width:100%;padding:13px;font-size:20px;text-align:center;letter-spacing:5px;border:1px solid var(--line);border-radius:12px;margin:10px 0}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#173126;color:#fff;padding:9px 13px;border-radius:999px;display:none;z-index:80;font-size:13px}
+@media(max-width:520px){header{padding-top:6px}.brand{font-size:18px}.title{font-size:16px}.truck{font-size:42px}.fci{width:42px;height:42px}.visual{height:47px}.grid{grid-template-columns:1fr 1fr}.sheet{margin-top:5px;padding:11px}.summary{gap:4px}.sum{padding:6px 3px}.stack{padding:8px}.actions button{padding:7px 8px}}
+@media(max-width:360px){.stack{grid-template-columns:1fr}.actions{justify-content:flex-end}.grid{grid-template-columns:1fr}.summary{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="visual"><div class="truck">🚛</div><div><div class="brand">FSD SABARMATI</div><div class="title">TRUCK WISE MOISTURE</div></div><div class="fci">FCI<br>INDIA</div></div>
+</header>
 <main>
-<section class="card addCard"><div class="sectionHead"><div><span class="eyebrow">STACK MANAGEMENT</span><h2>➕ ADD STACK</h2><div class="muted">New stack popup me enter karein</div></div><span class="localBadge">LOCAL TEST</span></div><button onclick="openAddStack()">➕ ADD STACK</button></section>
-<section class="card"><div class="sectionHead"><div><span class="eyebrow">ACTIVE STACKS</span><h2>📋 UNDER ISSUE STACK</h2></div><span class="countBadge" id="issueCount">0</span></div><div class="commodityTitle wheatTitle">🌾 WHEAT</div><div id="wi"></div><div class="commodityTitle riceTitle">🌱 RICE</div><div id="ri"></div></section>
-<section class="card"><h2>💧 SAVED MOISTURE ENTRIES</h2><div id="en"></div></section>
-<section class="card"><h2>📚 COMPLETE STACK / HISTORY</h2><div id="hi"></div><button class="danger" style="margin-top:8px" onclick="clearHistory()">Clear History (PIN)</button></section>
+  <div class="card"><button class="primary wide" onclick="openStack()">➕ ADD STACK</button></div>
+  <div class="card"><div class="section">UNDER ISSUE STACK <span class="count" id="ucount">0</span></div><div id="under"></div></div>
+  <div class="card"><div class="section">HISTORY <button class="danger" onclick="pinAction('history')">🗑 CLEAR HISTORY</button></div><div id="history"></div></div>
 </main>
 
-<div class="modal" id="modal"><div class="sheet"><h2 id="modalTitle">💧 MOISTURE UPDATE</h2><div class="summary"><div>RMC<b id="mr">-</b></div><div>Remaining Bags<b id="mb">-</b></div><div>Commodity<b id="mc">-</b></div></div><div style="margin-top:10px"><label>TRUCK NUMBER (Optional)</label><input id="truck" placeholder="RJ14AB1234"></div><div class="compact" style="margin-top:10px"><div><label>UPDATE BAGS</label><input id="bags" type="number" min="1" oninput="preview()"></div><div><label>MOISTURE %</label><input id="moist" type="number" step=".01" oninput="preview()"></div><div class="diffwrap"><label>DIFFERENCE PROJECTION</label><div class="diff" id="df">—</div></div></div><div style="margin-top:9px"><label>SLIP</label><select id="slip"><option>Yes</option><option>No</option></select></div><div class="actions"><button class="secondary" onclick="closeUpdate()">Cancel</button><button onclick="saveEntry()">💾 SAVE UPDATE</button></div></div></div>
-
-<div class="modal" id="addModal"><div class="sheet stackSheet"><div class="modalTop"><h2>➕ ADD STACK</h2><button class="closeBtn" onclick="closeAddStack()">×</button></div><div class="grid"><div><label>Stack Number *</label><input id="sn" placeholder="S-101"></div><div><label>Total Bags *</label><input id="tb" type="number" min="1" inputmode="numeric" placeholder="2500"></div><div><label>RMC % *</label><input id="rmc" type="number" step=".01" inputmode="decimal" placeholder="13.20"></div><div><label>Commodity *</label><select id="com"><option value="">Select</option><option>Wheat</option><option>Rice</option></select></div><div class="full"><button onclick="addStack()">💾 SAVE STACK</button></div><div class="full"><button class="secondary" onclick="closeAddStack()">Cancel</button></div></div></div></div>
-
-<div class="modal" id="stackModal"><div class="sheet"><h2>✏️ EDIT STACK / RMC</h2><input type="hidden" id="oldStack"><div class="grid"><div><label>Stack Number *</label><input id="esn"></div><div><label>Total Bags *</label><input id="etb" type="number" min="1"></div><div><label>RMC % *</label><input id="ermc" type="number" step=".01"></div><div><label>Commodity *</label><select id="ecom"><option>Wheat</option><option>Rice</option></select></div><div class="full"><button onclick="saveStackEdit()">💾 SAVE STACK / RMC</button></div><div class="full"><button class="secondary" onclick="closeStackEdit()">Cancel</button></div></div></div></div>
+<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+<div class="login" id="login"><div class="loginbox"><div style="font-size:40px">🔐</div><h2>FSD Sabarmati</h2><div>Enter PIN to open Moisture Sheet</div><input id="loginpin" type="password" inputmode="numeric" maxlength="8" placeholder="PIN"><button class="primary wide" onclick="login()">LOGIN</button><div style="font-size:12px;color:#68756d;margin-top:8px">Testing PIN: 9001</div></div></div>
+<div class="toast" id="toast"></div>
 
 <script>
-const K='fsd_sabarmati_moisture_v1';let db=JSON.parse(localStorage.getItem(K)||'{"stacks":{},"history":{}}'),cur=null,editId=null;
-const $=id=>document.getElementById(id),N=x=>Number(x)||0;
-function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function saveDB(){localStorage.setItem(K,JSON.stringify(db));render()}
-function used(s,skipId=null){return s.entries.filter(e=>e.id!==skipId).reduce((a,e)=>a+N(e.bags),0)}
-function rem(s,skipId=null){return N(s.total)-used(s,skipId)}
-function imc(s,extraBags=0,extraMoist=0,skipId=null){let B=used(s,skipId),W=s.entries.filter(e=>e.id!==skipId).reduce((a,e)=>a+N(e.bags)*N(e.moist),0);B+=N(extraBags);W+=N(extraBags)*N(extraMoist);return B?W/B:0}
-function diffClass(d){return d>0?'pos':d<0?'neg':'zero'}
-function diffText(d){return (d>0?'+':'')+d.toFixed(2)+'%'}
-function openAddStack(){$('addModal').classList.add('show');setTimeout(()=>{if(window.innerWidth<700)$('sn').focus()},120)}
-function closeAddStack(){$('addModal').classList.remove('show');document.activeElement?.blur()}
-function addStack(){let n=$('sn').value.trim(),t=N($('tb').value),r=N($('rmc').value),c=$('com').value;if(!n||t<1||r<0||!c)return alert('Stack Number, Total Bags, RMC aur Commodity fill karein.');if(db.stacks[n])return alert('Ye Stack Number already Under Issue me hai.');db.stacks[n]={sn:n,total:t,rmc:r,com:c,entries:[]};saveDB();$('sn').value='';$('tb').value='';$('rmc').value='';$('com').value='';closeAddStack();openUpdate(n)}
-function openUpdate(no,entryId=null){cur=no;editId=entryId;let s=db.stacks[no];if(!s)return;let e=entryId?s.entries.find(x=>x.id===entryId):null;$('truck').value=e?.truck||'';$('bags').value=e?.bags||'';$('moist').value=e?.moist??'';$('slip').value=e?.slip||'Yes';$('mr').textContent=N(s.rmc).toFixed(2)+'%';$('mb').textContent=rem(s,entryId);$('mc').textContent=s.com;$('modalTitle').textContent=e?'✏️ EDIT MOISTURE ENTRY':'💧 MOISTURE UPDATE';$('df').textContent='—';$('df').className='diff';$('modal').classList.add('show');preview()}
-function closeUpdate(){$('modal').classList.remove('show');cur=null;editId=null}
-function preview(){if(!cur)return;let s=db.stacks[cur],b=N($('bags').value),m=N($('moist').value);if(!b||!m){$('df').textContent='—';$('df').className='diff';return}let max=s.com==='Wheat'?14:15;if(m>max){$('df').textContent='Max '+max.toFixed(2)+'%';$('df').className='diff neg';return}let d=imc(s,b,m,editId);d=d-N(s.rmc);$('df').textContent=diffText(d);$('df').className='diff '+diffClass(d)}
-function saveEntry(){let s=db.stacks[cur],b=N($('bags').value),m=N($('moist').value),max=s.com==='Wheat'?14:15;if(b<1)return alert('Update Bags enter karein.');if(b>rem(s,editId))return alert('Update Bags remaining bags se zyada nahi ho sakte.');if(m<0||m>max)return alert('Maximum moisture '+max.toFixed(2)+'% hai.');let data={id:editId||Date.now(),truck:$('truck').value.trim(),bags:b,moist:m,slip:$('slip').value};if(editId){let i=s.entries.findIndex(e=>e.id===editId);if(i>=0)s.entries[i]=data}else s.entries.push(data);saveDB();closeUpdate();let bal=rem(s);if(!editId&&bal>=-100&&bal<=50&&confirm('Balance '+bal+' bags hai. History me move karna hai?')){db.history[s.sn]=JSON.parse(JSON.stringify(s));delete db.stacks[s.sn];saveDB()}}
-function openStackEdit(n){let s=db.stacks[n];if(!s)return;$('oldStack').value=n;$('esn').value=s.sn;$('etb').value=s.total;$('ermc').value=s.rmc;$('ecom').value=s.com;$('stackModal').classList.add('show')}
-function closeStackEdit(){$('stackModal').classList.remove('show')}
-function saveStackEdit(){let old=$('oldStack').value,n=$('esn').value.trim(),t=N($('etb').value),r=N($('ermc').value),c=$('ecom').value;if(!n||t<1||r<0||!c)return alert('Stack Number, Total Bags, RMC aur Commodity fill karein.');if(n!==old&&db.stacks[n])return alert('New Stack Number already exists.');let s=db.stacks[old];if(t<used(s))return alert('Total Bags updated entries ke total se kam nahi ho sakte.');if(n!==old){s.sn=n;delete db.stacks[old];db.stacks[n]=s} s.total=t;s.rmc=r;s.com=c;saveDB();closeStackEdit()}
-function del(n,id){if(confirm('Delete this moisture entry?')){let s=db.stacks[n];s.entries=s.entries.filter(e=>e.id!==id);saveDB()}}
-function completeStack(n){let s=db.stacks[n],bal=rem(s);if(bal<-100||bal>50)return alert('History confirmation sirf +50 se -100 bags ke balance range me available hai.');if(confirm('Balance '+bal+' bags hai. History me move karna hai?')){db.history[s.sn]=JSON.parse(JSON.stringify(s));delete db.stacks[n];saveDB()}}
-function render(){let stacks=Object.values(db.stacks),make=s=>'<div class="stack '+(s.com==='Wheat'?'wheat':'rice')+'"><div class="top"><b>'+esc(s.sn)+'</b><span class="badge">'+s.com+'</span></div><div class="small">Total: '+s.total+' | Updated: '+used(s)+' | Remaining: '+rem(s)+' | RMC: '+N(s.rmc).toFixed(2)+'%</div><div class="stackActions"><button onclick="openUpdate(\''+esc(s.sn)+'\')">💧 Update Moisture</button><button class="secondary" onclick="openStackEdit(\''+esc(s.sn)+'\')">✏️ Edit / RMC</button></div><button class="secondary" style="margin-top:7px" onclick="completeStack(\''+esc(s.sn)+'\')">📚 Complete / History</button></div>';$('issueCount').textContent=stacks.length;$('wi').innerHTML=stacks.filter(s=>s.com==='Wheat').map(make).join('')||'<span class="muted">No Wheat stack.</span>';$('ri').innerHTML=stacks.filter(s=>s.com==='Rice').map(make).join('')||'<span class="muted">No Rice stack.</span>';let rows=[];stacks.forEach(s=>s.entries.forEach(e=>rows.push({s,e})));$('en').innerHTML=rows.length?'<div class="table"><table><tr><th>Sr No.</th><th>Truck Number</th><th>Bags</th><th>Moisture</th><th>Slip</th><th>Action</th></tr>'+rows.map((x,i)=>{let I=imc(x.s),d=I-x.s.rmc;return '<tr><td>#'+(i+1)+'<br><b>'+esc(x.s.sn)+'</b></td><td>'+esc(x.e.truck||'-')+'</td><td>'+x.e.bags+'</td><td>'+N(x.e.moist).toFixed(2)+'%</td><td>'+x.e.slip+'</td><td><div style="display:grid;gap:5px"><button onclick="openUpdate(\''+esc(x.s.sn)+'\','+x.e.id+')">✏️ Edit</button><button class="danger" onclick="del(\''+esc(x.s.sn)+'\','+x.e.id+')">Delete</button></div></td></tr><tr><td colspan="6"><div class="entryCalc"><b>RMC:</b> '+N(x.s.rmc).toFixed(2)+'% &nbsp; <b>IMC:</b> '+I.toFixed(2)+'% &nbsp; <b>Difference:</b> <span class="'+diffClass(d)+'">'+diffText(d)+'</span></div></td></tr>'}).join('')+'</table></div>':'<span class="muted">No saved entries.</span>';$('hi').innerHTML=Object.values(db.history).map(s=>'<div class="stack '+(s.com==='Wheat'?'wheat':'rice')+'"><b>'+esc(s.sn)+'</b> — '+s.com+'<div class="small">Entries: '+s.entries.length+' | Total Bags: '+s.total+' | RMC: '+N(s.rmc).toFixed(2)+'%</div></div>').join('')||'<span class="muted">No completed stack.</span>'}
-function clearHistory(){if(prompt('History clear PIN:')!=='9001')return alert('Wrong PIN');if(confirm('Clear history?')){db.history={};saveDB()}}
-const vv=window.visualViewport;function adjustForKeyboard(){if(!vv)return;document.documentElement.style.setProperty('--vvh',vv.height+'px');document.querySelectorAll('.modal.show .sheet').forEach(el=>{if(window.innerWidth<700)el.style.maxHeight=Math.max(260,vv.height-12)+'px'})}if(vv){vv.addEventListener('resize',adjustForKeyboard);vv.addEventListener('scroll',adjustForKeyboard)}document.addEventListener('focusin',e=>{if(e.target.matches('input,select,textarea'))setTimeout(adjustForKeyboard,80)});document.addEventListener('focusout',()=>setTimeout(adjustForKeyboard,80));
+const PIN="9001", KEY="fsd_sabarmati_moisture_final";
+let db=JSON.parse(localStorage.getItem(KEY)||'{"stacks":[],"history":[]}'), current=null;
+
+function save(){localStorage.setItem(KEY,JSON.stringify(db));render();}
+function toast(s){let e=document.getElementById('toast');e.textContent=s;e.style.display='block';setTimeout(()=>e.style.display='none',1800)}
+function closeModal(){document.getElementById('modal').classList.remove('show');current=null}
+function show(html){document.getElementById('sheet').innerHTML=html;document.getElementById('modal').classList.add('show')}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function calc(s){let used=s.entries.reduce((a,e)=>a+Number(e.bags||0),0);let wt=s.entries.reduce((a,e)=>a+Number(e.bags||0)*Number(e.moisture||0),0);let imc=used?wt/used:0;return {used,remaining:Number(s.total)-used,imc,diff:imc-Number(s.rmc)}}
+function openStack(id=null){
+ let s=id?db.stacks.find(x=>x.id===id):null;
+ show(`<div class="mhead">${s?'✏️ EDIT STACK':'➕ ADD STACK'}<button class="x" onclick="closeModal()">×</button></div>
+ <div class="grid">
+ <div class="field"><label>STACK NUMBER</label><input id="fstack" value="${esc(s?.stack||'')}"></div>
+ <div class="field"><label>TOTAL BAGS</label><input id="ftotal" type="number" inputmode="numeric" value="${s?.total??''}"></div>
+ <div class="field"><label>RMC % ${s?'🔐 PIN required to change':''}</label><input id="frmc" type="number" step="0.01" value="${s?.rmc??''}"></div>
+ <div class="field"><label>COMMODITY</label><select id="fcom"><option ${s?.commodity==='Wheat'?'selected':''}>Wheat</option><option ${s?.commodity==='Rice'?'selected':''}>Rice</option></select></div>
+ </div><div style="margin-top:10px"><button class="primary wide" onclick="saveStack('${s?.id||''}')">${s?'SAVE CHANGES':'ADD STACK'}</button></div>`);
+}
+function saveStack(id){
+ let stack=document.getElementById('fstack').value.trim(), total=Number(document.getElementById('ftotal').value), rmc=Number(document.getElementById('frmc').value), com=document.getElementById('fcom').value;
+ if(!stack||!total||rmc<0){toast('Please fill all stack details');return}
+ if(id){
+   let s=db.stacks.find(x=>x.id===id), old=s.rmc;
+   if(old!==rmc && !askPin('RMC change'))return;
+   s.stack=stack;s.total=total;s.rmc=rmc;s.commodity=com;
+ }else db.stacks.push({id:Date.now().toString(),stack,total,rmc,commodity:com,entries:[],created:Date.now()});
+ save();closeModal();toast('Stack saved');
+}
+function askPin(label){
+ let p=prompt(label+' PIN'); if(p!==PIN){alert('Wrong PIN');return false} return true;
+}
+function deleteStack(id){
+ if(!askPin('Delete Under Issue Stack'))return;
+ db.stacks=db.stacks.filter(s=>s.id!==id);save();toast('Stack deleted');
+}
+function openStackView(id){
+ current=id;let s=db.stacks.find(x=>x.id===id), c=calc(s);
+ show(`<div class="mhead">💧 ${esc(s.stack)} — ${esc(s.commodity)}<button class="x" onclick="closeModal()">×</button></div>
+ <div class="summary"><div class="sum">RMC<b>${s.rmc.toFixed(2)}%</b></div><div class="sum">Remaining<b>${c.remaining}</b></div><div class="sum">IMC<b>${c.imc.toFixed(2)}%</b></div></div>
+ <div class="row" style="gap:6px"><button class="ghost" onclick="openStack('${s.id}')">✏️ EDIT STACK</button><button class="primary" onclick="openMoisture('${s.id}')">💧 UPDATE MOISTURE</button></div>
+ <div style="font-weight:900;margin:12px 0 5px">SAVED MOISTURE ENTRIES</div>
+ <div class="entries">${entriesHtml(s)}</div>
+ <button class="primary wide complete" ${c.remaining<=50&&c.remaining>=-100?'':'disabled'} onclick="completeStack('${s.id}')">✅ COMPLETE STACK</button>
+ <div class="under">Complete allowed only when Remaining Bags is between <b>50 and -100</b>.</div>`);
+}
+function entriesHtml(s){
+ let head='<div class="entry entryhead"><span>#</span><span>Truck</span><span>Bags</span><span>Moist.</span><span>Slip</span><span>Action</span></div>';
+ if(!s.entries.length)return head+'<div class="empty">No moisture entry yet.</div>';
+ let rows=s.entries.map((e,i)=>{let c=calc({...s,entries:s.entries.slice(0,i+1)});return `<div class="entry"><span>${i+1}</span><span>${esc(e.truck||'-')}</span><span>${e.bags}</span><span>${Number(e.moisture).toFixed(2)}%</span><span><button class="ghost" style="padding:4px 7px;font-size:11px" onclick="toggleSlip('${s.id}',${i})">${e.slip?'YES':'NO'}</button></span><span><button class="ghost" style="padding:4px 7px;font-size:11px" onclick="editEntry('${s.id}',${i})">EDIT</button> <button class="danger" style="padding:4px 7px;font-size:11px" onclick="deleteEntry('${s.id}',${i})">DEL</button></span></div><div class="under">RMC ${s.rmc.toFixed(2)}% | IMC ${c.imc.toFixed(2)}% | Difference <b style="color:${c.diff<0?'#c62828':'#087b35'}">${c.diff>=0?'+':''}${c.diff.toFixed(2)}%</b></div>`}).join('');
+ return head+rows;
+}
+function openMoisture(id,idx=null){
+ let s=db.stacks.find(x=>x.id===id), e=idx==null?null:s.entries[idx], c=calc(s);
+ show(`<div class="mhead">💧 ${e?'EDIT':'UPDATE'} MOISTURE<button class="x" onclick="openStackView('${id}')">×</button></div>
+ <div class="summary"><div class="sum">RMC<b>${s.rmc.toFixed(2)}%</b></div><div class="sum">Remaining<b id="rem">${c.remaining}</b></div><div class="sum">Commodity<b>${s.commodity}</b></div></div>
+ <div class="field"><label>TRUCK NUMBER (OPTIONAL)</label><input id="mtruck" value="${esc(e?.truck||'')}" placeholder="Optional"></div>
+ <div class="grid" style="margin-top:8px"><div class="field"><label>UPDATE BAGS</label><input id="mbags" type="number" inputmode="numeric" value="${e?.bags??''}" oninput="preview('${id}',${idx==null?'null':idx})"></div><div class="field"><label>MOISTURE %</label><input id="mmoist" type="number" step="0.01" inputmode="decimal" value="${e?.moisture??''}" oninput="preview('${id}',${idx==null?'null':idx})"></div></div>
+ <div id="mdiff" class="diff" style="margin-top:8px">Difference Projection: —</div>
+ <div class="grid" style="margin-top:8px"><div><label style="font-size:12px;font-weight:800;color:#68756d">SLIP</label><select id="mslip" style="width:100%;padding:11px;border:1px solid #cbd8d0;border-radius:10px;font-size:16px"><option value="1" ${e?.slip!==false?'selected':''}>Yes</option><option value="0" ${e?.slip===false?'selected':''}>No</option></select></div></div>
+ <button class="primary wide" style="margin-top:10px" onclick="saveMoisture('${id}',${idx==null?'null':idx})">💾 SAVE UPDATE</button>`);
+ preview(id,idx);
+}
+function preview(id,idx){
+ let s=db.stacks.find(x=>x.id===id), bags=Number(document.getElementById('mbags')?.value||0), m=Number(document.getElementById('mmoist')?.value||0);
+ let old=idx==null?0:Number(s.entries[idx]?.bags||0), entries=s.entries.filter((_,i)=>i!==idx); entries.push({bags,moisture:m});
+ let c=calc({...s,entries}); let d=document.getElementById('mdiff');if(!d)return;
+ d.textContent='Difference Projection: '+(c.diff>=0?'+':'')+c.diff.toFixed(2)+'%';d.className='diff '+(c.diff>0?'pos':c.diff<0?'neg':'');
+}
+function saveMoisture(id,idx){
+ let s=db.stacks.find(x=>x.id===id), bags=Number(document.getElementById('mbags').value), m=Number(document.getElementById('mmoist').value), truck=document.getElementById('mtruck').value.trim(), slip=document.getElementById('mslip').value==='1';
+ let max=s.commodity==='Wheat'?14:15;if(!bags||bags<0||m<0||m>max){alert(`${s.commodity} maximum moisture is ${max}%`);return}
+ let e={bags,moisture:m,truck,slip,date:new Date().toISOString()};if(idx==null)s.entries.push(e);else s.entries[idx]=e;save();openStackView(id);toast('Moisture saved');
+}
+function editEntry(id,i){openMoisture(id,i)}
+function deleteEntry(id,i){if(!confirm('Delete this moisture entry?'))return;db.stacks.find(s=>s.id===id).entries.splice(i,1);save();openStackView(id)}
+function toggleSlip(id,i){let s=db.stacks.find(x=>x.id===id);s.entries[i].slip=!s.entries[i].slip;save();openStackView(id)}
+function completeStack(id){
+ let s=db.stacks.find(x=>x.id===id), c=calc(s);if(!(c.remaining<=50&&c.remaining>=-100))return;
+ if(!confirm(`Complete stack ${s.stack} and move it to History?`))return;
+ db.history.unshift({...s,completedAt:new Date().toISOString(),remaining:c.remaining});db.stacks=db.stacks.filter(x=>x.id!==id);save();closeModal();toast('Stack moved to History');
+}
+function pinAction(type){
+ if(!askPin(type==='history'?'Clear History':'Action'))return;
+ if(type==='history'){if(!confirm('Clear all History?'))return;db.history=[];save();toast('History cleared')}
+}
+function render(){
+ let u=document.getElementById('under'),h=document.getElementById('history');document.getElementById('ucount').textContent=db.stacks.length;
+ u.innerHTML=db.stacks.length?db.stacks.map(s=>{let c=calc(s);return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">Total ${s.total} | Updated ${c.used} | Remaining <b>${c.remaining}</b> | RMC ${Number(s.rmc).toFixed(2)}%</div></div><div class="actions"><button class="ghost" onclick="openStackView('${s.id}')">OPEN</button><button class="danger" onclick="deleteStack('${s.id}')">DELETE</button></div></div>`}).join(''):'<div class="empty">No Under Issue Stack</div>';
+ h.innerHTML=db.history.length?db.history.map(s=>{let c=calc(s);return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">Total ${s.total} | Remaining ${s.remaining} | RMC ${Number(s.rmc).toFixed(2)}% | Entries ${s.entries.length}</div></div><span class="badge">COMPLETED</span></div>`}).join(''):'<div class="empty">No History</div>';
+}
+function login(){if(document.getElementById('loginpin').value===PIN){document.getElementById('login').style.display='none';render()}else alert('Wrong PIN')}
+document.getElementById('loginpin').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
 render();
-</script></body></html>
+</script>
+</body></html>
