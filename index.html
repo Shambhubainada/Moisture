@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#176b3a">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>FSD Sabarmati Truck Wise Moisture</title><link rel="manifest" href="manifest.json">
+<title>FSD Sabarmati Truck Wise Moisture</title><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/icon-192.png">
 <style>
 :root{--g:#176b3a;--gl:#eaf6ee;--r:#c62828;--b:#1565c0;--ink:#193126;--mut:#68756d;--line:#dbe6df}
 *{box-sizing:border-box}body{margin:0;background:#f4f7f5;color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,Arial,sans-serif}
@@ -14,18 +14,18 @@ header{background:linear-gradient(#e8f7ed,#fff);padding:8px 10px 7px;text-align:
 main{max-width:760px;margin:auto;padding:9px}.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:11px;margin:8px 0;box-shadow:0 2px 8px #153d1b0b}
 button{font:inherit;font-weight:800;border:0;border-radius:11px;padding:10px 13px;cursor:pointer}.primary{background:var(--g);color:white}.ghost{background:#fff;border:1px solid var(--line)}.danger{background:#fff0f0;color:var(--r);border:1px solid #efb8b8}.wide{width:100%}
 .section{font-weight:900;display:flex;justify-content:space-between;align-items:center;margin:2px 0 8px}.count{background:var(--gl);color:var(--g);border-radius:999px;padding:3px 8px;font-size:12px}
-.stack{display:grid;grid-template-columns:1fr auto;gap:5px;align-items:center;padding:7px 8px;border:1px solid var(--line);border-radius:10px;margin:4px 0}.stack.w{background:#fff8d9;border-left:6px solid #d0a400}.stack.r{background:#eaf5ff;border-left:6px solid #2385c7}.stack.w{border-left:6px solid #d0a400}.stack.r{border-left:6px solid #2385c7}.stackname{font-weight:900}.meta{font-size:12px;color:var(--mut);margin-top:2px}.actions{display:flex;gap:4px;align-items:center}.actions button{padding:5px 7px;font-size:10px;border-radius:7px}.under .stack{padding:5px 6px;margin:3px 0;border-radius:8px}.under .stackname{font-size:12px}.under .meta{font-size:10px;line-height:1.25}.under .actions button{padding:4px 6px;font-size:9px;border-radius:6px}
+.stack{display:grid;grid-template-columns:1fr auto;gap:5px;align-items:center;padding:7px 8px;border:1px solid var(--line);border-radius:10px;margin:4px 0}.stack.w{background:#fff8d9;border-left:6px solid #d0a400}.stack.r{background:#eaf5ff;border-left:6px solid #2385c7}.stack.w{border-left:6px solid #d0a400}.stack.r{border-left:6px solid #2385c7}.stackname{font-weight:900}.meta{font-size:12px;color:var(--mut);margin-top:2px}.actions{display:flex;gap:4px;align-items:center}.actions button{padding:5px 7px;font-size:10px;border-radius:7px}.under .stack{padding:5px 6px;margin:3px 0;border-radius:8px}.under .stackname{font-size:12px}.under .meta{font-size:10px;line-height:1.25}.under .actions button{padding:3px 5px;font-size:8px;border-radius:5px}.under .stack{grid-template-columns:minmax(0,1fr) auto;gap:3px;padding:3px 4px;min-height:0}.under .stackname{font-size:11px}.under .meta{font-size:9px;line-height:1.15}.under .actions{gap:2px}.under-summary{display:flex;flex-wrap:nowrap;gap:4px;margin-top:1px;font-size:8.5px;line-height:1.05;align-items:center;white-space:nowrap}.under-summary span{white-space:nowrap}.under .actions{align-self:center}.under .actions button{min-width:42px}
 .modal{position:fixed;inset:0;background:#0008;display:none;align-items:flex-start;justify-content:center;padding:8px;z-index:30;overflow:auto}.modal.show{display:flex}.sheet{width:min(520px,100%);background:#fff;border-radius:17px;padding:13px;margin-top:max(8px,env(safe-area-inset-top));max-height:calc(100dvh - 16px);overflow:auto;box-shadow:0 12px 35px #0005}
 .mhead{display:flex;justify-content:space-between;align-items:center;font-weight:900;margin-bottom:8px;gap:6px}.mhead b{flex:1;text-align:center}.x{font-size:22px;background:#f2f4f2;padding:3px 9px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.moistgrid{grid-template-columns:1fr 1fr;gap:5px}.moistgrid .field input{padding:9px;font-size:15px}.field label{display:block;font-size:12px;font-weight:800;color:var(--mut);margin-bottom:4px}.field input,.field select{width:100%;padding:11px;border:1px solid #cbd8d0;border-radius:10px;font-size:16px;background:#fff}
 .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:7px 0}.sum{background:var(--gl);border-radius:10px;padding:7px;text-align:center;font-size:12px}.sum b{display:block;font-size:15px}
 .diff{font-weight:900;font-size:15px;padding:9px;border-radius:10px;text-align:center;background:#f1f4f2}.pos{color:#087b35;background:#eaf7ee}.neg{color:var(--r);background:#fff0f0}
-.entries{overflow-x:auto}.entry{min-width:0;background:#f8fbf9;border:1px solid #dfeae4;border-radius:8px;margin:4px 0;display:grid;grid-template-columns:25px 1.05fr .7fr .65fr .9fr;gap:2px;align-items:center;border-bottom:1px solid var(--line);padding:5px 1px;font-size:11px}.entry.has-truck{grid-template-columns:22px .95fr .62fr .62fr .75fr .9fr}.entry.no-truck{grid-template-columns:22px .72fr .62fr .62fr .9fr}.entry button{white-space:nowrap}.entryhead{font-size:10px}.entryhead{font-weight:900;background:#eef5f1;border:0;border-radius:5px;margin:2px 0}.saved-list .entry{box-shadow:0 1px 2px rgba(0,0,0,.04)}.under{font-size:12px;padding:7px 0;color:var(--mut)}.stack-moisture-summary{margin-top:7px;padding:8px 9px;background:#f1f7f4;border:1px solid #d9e8e0;border-radius:8px;line-height:1.7;font-size:11px;color:#315246}.complete{margin-top:9px}.complete:disabled{opacity:.45}
+.entries{overflow-x:auto}.entry{min-width:0;background:#f8fbf9;border:1px solid #dfeae4;border-radius:8px;margin:4px 0;display:grid;grid-template-columns:22px .75fr .6fr .62fr .82fr .72fr;gap:2px;align-items:center;border-bottom:1px solid var(--line);padding:5px 1px;font-size:11px}.entry.has-truck{grid-template-columns:20px .72fr .55fr .55fr .78fr .72fr .72fr}.entry.no-truck{grid-template-columns:20px .62fr .55fr .55fr .78fr .72fr}.entry button{white-space:nowrap}.entryhead{font-size:10px}.entryhead{font-weight:900;background:#eef5f1;border:0;border-radius:5px;margin:2px 0}.saved-list .entry{box-shadow:0 1px 2px rgba(0,0,0,.04)}.under{font-size:12px;padding:7px 0;color:var(--mut)}.stack-moisture-summary{margin-top:7px;padding:8px 9px;background:#f1f7f4;border:1px solid #d9e8e0;border-radius:8px;line-height:1.7;font-size:11px;color:#315246}.complete{margin-top:9px}.complete:disabled{opacity:.45}
 .login{position:fixed;inset:0;background:#eef7f0;display:flex;align-items:center;justify-content:center;padding:18px;z-index:50}.loginbox{width:min(380px,100%);background:white;border-radius:20px;padding:20px;text-align:center;border:1px solid var(--line)}.loginbox input{width:100%;padding:13px;font-size:20px;text-align:center;letter-spacing:5px;border:1px solid var(--line);border-radius:12px;margin:10px 0}
 .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#173126;color:#fff;padding:9px 13px;border-radius:999px;display:none;z-index:80;font-size:13px}
 @media(max-width:520px){header{padding-top:6px}.brand{font-size:18px}.title{font-size:16px}.truck{font-size:42px}.fci{width:42px;height:42px}.visual{height:47px}.grid{grid-template-columns:1fr 1fr}.sheet{margin-top:5px;padding:11px}.summary{gap:4px}.sum{padding:6px 3px}.stack{padding:8px}.actions button{padding:7px 8px}}
-@media(max-width:360px){.stack{grid-template-columns:1fr}.actions{justify-content:flex-end}.grid{grid-template-columns:1fr}.moistgrid{grid-template-columns:1fr 1fr}.summary{grid-template-columns:repeat(3,1fr)}}
-.saved-wheat{background:#fff8dc;border-color:#ead79a}.saved-rice{background:#eaf5ff;border-color:#b9d9ef}.saved-wheat span,.saved-rice span{min-width:0}.saved-wheat button,.saved-rice button{font-size:10px!important;padding:3px 6px!important}.slip-pill{display:inline-flex;align-items:center;gap:3px;padding:3px 5px;border-radius:6px;font-size:9px;font-weight:900;white-space:nowrap}.slip-yes{background:#e8f7ed;color:#087b35;border:1px solid #b9dfc4}.slip-no{background:#fff0f0;color:#c62828;border:1px solid #efb8b8}.slip-time{display:inline-block;font-size:8px;color:#68756d;line-height:1.15;margin-left:3px;white-space:nowrap}</style>
+@media(max-width:360px){.stack{grid-template-columns:1fr}.under .stack{grid-template-columns:minmax(0,1fr) auto!important}.actions{justify-content:flex-end}.grid{grid-template-columns:1fr}.moistgrid{grid-template-columns:1fr 1fr}.summary{grid-template-columns:repeat(3,1fr)}}
+.saved-wheat{background:#fff8dc;border-color:#ead79a}.saved-rice{background:#eaf5ff;border-color:#b9d9ef}.saved-wheat span,.saved-rice span{min-width:0}.saved-wheat button,.saved-rice button{font-size:10px!important;padding:3px 6px!important}.slip-pill{display:inline-flex;align-items:center;gap:3px;padding:3px 5px;border-radius:6px;font-size:9px;font-weight:900;white-space:nowrap}.slip-yes{background:#e8f7ed;color:#087b35;border:1px solid #b9dfc4}.slip-no{background:#fff0f0;color:#c62828;border:1px solid #efb8b8}.slip-time{display:inline-block;font-size:8px;color:#4f5f56;line-height:1.1;margin:0;white-space:nowrap;text-align:center}.entry-date{font-size:8px;line-height:1.1;white-space:nowrap;text-align:center;color:#53635a}</style>
 </head>
 <body>
 <header>
@@ -70,18 +70,22 @@ function saveStack(id){
  if(!stack||!total||rmc<0){toast('Please fill all stack details');return}
  if(id){
    let s=db.stacks.find(x=>x.id===id), old=s.rmc;
-   if(old!==rmc && !askPin('RMC change'))return;
-   s.stack=stack;s.total=total;s.rmc=rmc;s.commodity=com;
- }else db.stacks.push({id:Date.now().toString(),stack,total,rmc,commodity:com,entries:[],created:Date.now()});
- save();closeModal();toast('Stack saved');
+   if(old!==rmc){ askPin('RMC CHANGE',()=>finishSaveStack(id,stack,total,rmc,com)); return; }
+   finishSaveStack(id,stack,total,rmc,com);
+ }else finishSaveStack(id,stack,total,rmc,com);
 }
-function askPin(label){
- let p=prompt(label+' PIN'); if(p!==PIN){alert('Wrong PIN');return false} return true;
+function finishSaveStack(id,stack,total,rmc,com){
+ if(id){let s=db.stacks.find(x=>x.id===id);s.stack=stack;s.total=total;s.rmc=rmc;s.commodity=com;}
+ else db.stacks.push({id:Date.now().toString(),stack,total,rmc,commodity:com,entries:[],created:Date.now()});
+ save();closeModal();toast('Stack saved');render();
 }
-function deleteStack(id){
- if(!askPin('Delete Under Issue Stack'))return;
- db.stacks=db.stacks.filter(s=>s.id!==id);save();toast('Stack deleted');
+function askPin(label,onOk){
+ show(`<div class="mhead"><button class="ghost" onclick="closeModal()">← BACK</button><b>🔐 ${label}</b><button class="x" onclick="closeModal()">×</button></div><div class="pinbox"><div style="font-size:12px;color:var(--mut);margin-bottom:7px">Enter 4-digit PIN</div><input id="actionPin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off" autofocus placeholder="PIN"><button class="primary wide" style="margin-top:9px" onclick="verifyActionPin()">VERIFY</button><div style="font-size:11px;color:#68756d;margin-top:7px">Numeric keypad will open on mobile.</div></div>`);
+ window._pinCallback=onOk; setTimeout(()=>document.getElementById('actionPin')?.focus(),80);
+ document.getElementById('actionPin').addEventListener('keydown',e=>{if(e.key==='Enter')verifyActionPin()});
 }
+function verifyActionPin(){let el=document.getElementById('actionPin');if(!el)return;if(el.value===PIN){let cb=window._pinCallback;window._pinCallback=null;closeModal();if(cb)cb();}else{el.value='';el.focus();toast('Wrong PIN');}}
+function deleteStack(id){askPin('DELETE STACK',()=>{db.stacks=db.stacks.filter(s=>s.id!==id);save();render();toast('Stack deleted')});}
 function openStackView(id){
  const s0=db.stacks.find(x=>x.id===id); if(!s0){backHome();return;}
  current=id; sessionStorage.setItem(VIEW,id); location.hash='stack-'+id;
@@ -149,7 +153,7 @@ function entryDateTime(e){
 function entriesHtml(s){
  const hasTruck=s.entries.some(e=>String(e.truck||'').trim()!=='');
  const cols=hasTruck?' has-truck':' no-truck';
- let head=`<div class="entry${cols} entryhead"><span>#</span>${hasTruck?'<span>Truck</span>':''}<span>Bags</span><span>Moist.</span><span>Slip</span><span>Action</span></div>`;
+ let head=`<div class="entry${cols} entryhead"><span>#</span>${hasTruck?'<span>Truck</span>':''}<span>Bags</span><span>Moist.</span><span>Slip</span><span>Date / Time</span><span>Action</span></div>`;
  if(!s.entries.length)return head+'<div class="empty">No moisture entry yet.</div>';
  let rows=s.entries.map((e,i)=>{
    const slip=e.slip
@@ -157,7 +161,7 @@ function entriesHtml(s){
      : '<span class="slip-pill slip-no">NO</span>';
    const dt=entryDateTime(e);
    const rowClass=s.commodity==='Wheat'?'saved-wheat':'saved-rice';
-   return `<div class="entry ${rowClass}${cols}"><span>${i+1}</span>${hasTruck?`<span>${esc(e.truck||'')}</span>`:''}<span>${e.bags}</span><span>${Number(e.moisture).toFixed(2)}%</span><span style="display:flex;align-items:center;justify-content:center;gap:2px;flex-wrap:nowrap"><button class="slip-btn" style="border:0;background:transparent;padding:0" onclick="toggleSlip('${s.id}',${i})">${slip}</button>${dt}</span><span><button class="ghost" style="padding:3px 5px;font-size:9px" onclick="editEntry('${s.id}',${i})">EDIT</button> <button class="danger" style="padding:3px 5px;font-size:9px" onclick="deleteEntry('${s.id}',${i})">DEL</button></span></div>`;
+   return `<div class="entry ${rowClass}${cols}"><span>${i+1}</span>${hasTruck?`<span>${esc(e.truck||'')}</span>`:''}<span>${e.bags}</span><span>${Number(e.moisture).toFixed(2)}%</span><span style="display:flex;align-items:center;justify-content:center"><button class="slip-btn" style="border:0;background:transparent;padding:0" onclick="toggleSlip('${s.id}',${i})">${slip}</button></span><span class="entry-date">${dt}</span><span><button class="ghost" style="padding:3px 5px;font-size:9px" onclick="editEntry('${s.id}',${i})">EDIT</button> <button class="danger" style="padding:3px 5px;font-size:9px" onclick="deleteEntry('${s.id}',${i})">DEL</button></span></div>`;
  }).join('');
  const total=calc(s);
  const diffColor=total.diff<0?'#c62828':'#087b35';
@@ -200,13 +204,14 @@ function completeStack(id){
  db.history.unshift({...s,completedAt:new Date().toISOString(),remaining:c.remaining});db.stacks=db.stacks.filter(x=>x.id!==id);save();closeModal();toast('Stack moved to History');
 }
 function pinAction(type){
- if(!askPin(type==='history'?'Clear History':'Action'))return;
- if(type==='history'){if(!confirm('Clear all History?'))return;db.history=[];save();toast('History cleared')}
+ askPin(type==='history'?'CLEAR HISTORY':'ACTION',()=>{
+   if(type==='history'){if(!confirm('Clear all History?'))return;db.history=[];save();render();toast('History cleared');}
+ });
 }
 function render(){
  document.getElementById("selectedStackView")?.remove();
  let u=document.getElementById('under'),h=document.getElementById('history');document.getElementById('ucount').textContent=db.stacks.length;
- u.innerHTML=db.stacks.length?db.stacks.map(s=>{let c=calc(s);return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">Total ${s.total} | Updated ${c.used} | Remaining <b>${c.remaining}</b> | RMC ${Number(s.rmc).toFixed(2)}%</div></div><div class="actions"><button class="ghost" onclick="openStackView('${s.id}')">OPEN</button><button class="danger" onclick="deleteStack('${s.id}')">DELETE</button></div></div>`}).join(''):'<div class="empty">No Under Issue Stack</div>';
+ u.innerHTML=db.stacks.length?db.stacks.map(s=>{let c=calc(s);let diff=c.diff;return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="under-summary"><span>RMC <b>${Number(s.rmc).toFixed(2)}%</b></span><span>IMC <b>${c.imc.toFixed(2)}%</b></span><span>Diff <b style="color:${diff<0?'#c62828':'#087b35'}">${diff>=0?'+':''}${diff.toFixed(2)}%</b></span><span>Remaining <b>${c.remaining}</b></span></div></div><div class="actions"><button class="ghost" onclick="openStackView('${s.id}')">OPEN</button><button class="ghost" onclick="openStack('${s.id}')">EDIT</button><button class="danger" onclick="deleteStack('${s.id}')">DELETE</button></div></div>`}).join(''):'<div class="empty">No Under Issue Stack</div>';
  const all=document.getElementById('savedAll'); if(all) all.innerHTML='';
  h.innerHTML=db.history.length?db.history.map(s=>{let c=calc(s);return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">Total ${s.total} | Remaining ${s.remaining} | RMC ${Number(s.rmc).toFixed(2)}% | Entries ${s.entries.length}</div></div><div class="actions"><span class="badge">COMPLETED</span><button class="ghost" onclick="openHistoryDetails('${s.id}')">📋 DETAILS</button></div></div>`}).join(''):'<div class="empty">No History</div>';
 }

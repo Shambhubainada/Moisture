@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" rx="112" fill="#176b3a"/>
+<rect x="48" y="68" width="416" height="376" rx="82" fill="#f5fbf7"/>
+<path d="M85 175h244v142H85z" fill="#f0c94a" stroke="#176b3a" stroke-width="16"/>
+<path d="M329 220h61l48 58v39h-109z" fill="#e9f5ff" stroke="#176b3a" stroke-width="16" stroke-linejoin="round"/>
+<path d="M348 236h34l30 35h-64z" fill="#b9ddf2"/>
+<rect x="111" y="205" width="126" height="38" rx="10" fill="#fff" opacity=".9"/>
+<text x="174" y="233" text-anchor="middle" font-family="Arial,sans-serif" font-size="25" font-weight="900" fill="#176b3a">FSD</text>
+<circle cx="164" cy="348" r="39" fill="#263238"/><circle cx="164" cy="348" r="17" fill="#e7ece9"/>
+<circle cx="378" cy="348" r="39" fill="#263238"/><circle cx="378" cy="348" r="17" fill="#e7ece9"/>
+<path d="M90 317h344" stroke="#176b3a" stroke-width="12" stroke-linecap="round"/>
+</svg>
