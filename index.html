@@ -100,10 +100,26 @@ function openStackView(id){
  </div>
  <div class="card"><div class="section">SAVED MOISTURE ENTRIES <span class="count">${s.entries.length}</span></div>
    <div class="entries">${entriesHtml(s)}</div>
-   ${c.remaining<=50&&c.remaining>=-100 ? `<button class="primary wide complete" onclick="completeStack('${s.id}')">✅ COMPLETE STACK</button><div class="under">Complete allowed only when Remaining Bags is between <b>50 and -100</b>.</div>` : ''}
+   ${c.remaining<=50&&c.remaining>=-100 ? `<div style="display:flex;gap:7px;margin-top:8px"><button class="primary wide complete" style="flex:1" onclick="completeStack('${s.id}')">✅ COMPLETE STACK</button><button class="ghost" style="min-width:92px" onclick="openStackDetails('${s.id}')">📋 DETAILS</button></div><div class="under">Complete allowed only when Remaining Bags is between <b>50 and -100</b>.</div>` : ''}
  </div>`;
  const underCard=document.getElementById('under')?.closest('.card');
  if(underCard) underCard.insertAdjacentElement('afterend',wrap); else main.appendChild(wrap);
+ wrap.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function openStackDetails(id){
+ const s=db.stacks.find(x=>x.id===id); if(!s){backHome();return;}
+ current=id; sessionStorage.setItem(VIEW,id); location.hash='details-'+id;
+ closeModal(); render();
+ const c=calc(s), main=document.querySelector('main');
+ const old=document.getElementById('selectedStackView'); if(old)old.remove();
+ const wrap=document.createElement('div'); wrap.id='selectedStackView';
+ const diffColor=c.diff<0?'#c62828':'#087b35';
+ const hasTruck=s.entries.some(e=>String(e.truck||'').trim()!=='');
+ const rows=s.entries.length?s.entries.map((e,i)=>`<div class="entry ${s.commodity==='Wheat'?'saved-wheat':'saved-rice'}${hasTruck?' has-truck':' no-truck'}"><span>${i+1}</span>${hasTruck?`<span>${esc(e.truck||'')}</span>`:''}<span>${e.bags}</span><span>${Number(e.moisture).toFixed(2)}%</span><span>${e.slip?'<b style="color:#087b35">YES</b>':'<b style="color:#c62828">NO</b>'}</span><span><button class="ghost" style="padding:4px 7px;font-size:11px" onclick="editEntry('${s.id}',${i})">VIEW / EDIT</button></span></div>`).join(''):'<div class="empty">No moisture entry yet.</div>';
+ const head=`<div class="entry${hasTruck?' has-truck':' no-truck'} entryhead"><span>#</span>${hasTruck?'<span>Truck</span>':''}<span>Bags</span><span>Moist.</span><span>Slip</span><span>Action</span></div>`;
+ wrap.innerHTML=`<div class="card"><div class="mhead"><button class="ghost" onclick="openStackView('${s.id}')">← BACK</button><b>📋 STACK DETAILS</b><button class="ghost" onclick="openStack('${s.id}')">✏️</button></div><div class="summary"><div class="sum">STACK<b>${esc(s.stack)}</b></div><div class="sum">${esc(s.commodity)}<b>${s.entries.length} ENTRIES</b></div></div><div class="summary"><div class="sum">TOTAL BAGS<b>${s.total}</b></div><div class="sum">UPDATED BAGS<b>${c.used}</b></div><div class="sum">REMAINING<b>${c.remaining}</b></div></div><div class="summary"><div class="sum">RMC<b>${Number(s.rmc).toFixed(2)}%</b></div><div class="sum">CURRENT IMC<b>${c.imc.toFixed(2)}%</b></div><div class="sum">DIFFERENCE<b style="color:${diffColor}">${c.diff>=0?'+':''}${c.diff.toFixed(2)}%</b></div></div></div><div class="card"><div class="section">MOISTURE ENTRY DETAILS <span class="count">${s.entries.length}</span></div><div class="entries">${head}${rows}</div></div>`;
+ const underCard=document.getElementById('under')?.closest('.card'); if(underCard)underCard.insertAdjacentElement('afterend',wrap); else main.appendChild(wrap);
  wrap.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
