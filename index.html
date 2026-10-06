@@ -142,7 +142,7 @@ function openHistoryView(){
    return `<div class="stack history-stack ${s.commodity==='Wheat'?'w':'r'}" onclick="openHistoryDetails('${s.id}')">
      <div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div>
      <div class="history-summary"><span>RMC <b>${Number(s.rmc).toFixed(2)}%</b></span><span>IMC <b>${c.imc.toFixed(2)}%</b></span><span class="history-diff" style="color:${diff<0?'#c62828':'#087b35'}">Difference <b>${diff>=0?'+':''}${diff.toFixed(2)}%</b></span><span>${c.remaining<0?'GP':c.remaining>0?'GR':'BALANCE'} <b>${Math.abs(c.remaining)}</b></span></div></div>
-     <div class="actions"><button class="danger" title="Delete" aria-label="Delete" onclick="event.stopPropagation();deleteHistoryStack('${s.id}')">🗑️</button></div>
+     <div class="actions"><button class="ghost" title="View" aria-label="View" onclick="event.stopPropagation();openHistoryDetails('${s.id}')">VIEW</button><button class="danger" title="Delete" aria-label="Delete" onclick="event.stopPropagation();deleteHistoryStack('${s.id}')">🗑️</button></div>
    </div>`;
  }).join(''):'<div class="empty">No completed stack in History</div>';
  wrap.innerHTML=`<div class="card"><div class="mhead"><button class="back-highlight" onclick="backHome()">← BACK</button><b>📚 HISTORY</b><span></span></div><div class="section">COMPLETED STACKS <span class="count">${db.history.length}</span></div>${items}<div class="history-bottom"><button class="danger wide" style="padding:5px 8px;font-size:10px" onclick="event.stopPropagation();pinAction('history')">🗑 CLEAR HISTORY</button></div></div>`;
@@ -282,14 +282,16 @@ function pinAction(type){
 }
 function render(){
  document.getElementById("selectedStackView")?.remove();
- let u=document.getElementById('under'),h=document.getElementById('history');document.getElementById('ucount').textContent=db.stacks.length;document.getElementById('hcount').textContent=db.history.length;
+ let main=document.querySelector('main');
+ if(!document.getElementById('under') || !document.getElementById('historyCard')){
+   main.innerHTML=`<div class="card" style="padding:7px 9px"><div style="display:flex;gap:6px"><button class="primary add-stack-btn" onclick="openStack()">➕ ADD STACK</button><button class="ghost add-stack-btn" onclick="openPinSettings()">🔐 PIN</button></div></div><div class="card"><div class="section">UNDER ISSUE STACK <span class="count" id="ucount">0</span></div><div id="under"></div></div><div class="card" id="historyCard" onclick="openHistoryView()"><div class="section">HISTORY <span class="count" id="hcount">0</span><span style="float:right;font-size:10px;color:#075ea8;font-weight:900">VIEW →</span></div><div class="empty" style="padding:7px 2px">Tap History to view completed stacks</div></div>`;
+ }
+ let u=document.getElementById('under'),h=document.getElementById('historyCard');document.getElementById('ucount').textContent=db.stacks.length;document.getElementById('hcount').textContent=db.history.length;
  u.innerHTML=db.stacks.length?db.stacks.map(s=>{let c=calc(s);let diff=c.diff;return `<div class="stack tap-open ${s.commodity==='Wheat'?'w':'r'}" onclick="toggleStackView('${s.id}')"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="under-summary"><span>RMC <b>${Number(s.rmc).toFixed(2)}%</b></span><span>IMC <b>${c.imc.toFixed(2)}%</b></span><span class="difference-blink" style="border-radius:5px;padding:1px 3px">Diff <b style="color:${diff<0?'#c62828':'#087b35'}">${diff>=0?'+':''}${diff.toFixed(2)}%</b></span><span>Remaining <b>${c.remaining}</b></span></div></div><div class="actions"><button class="ghost" title="Edit" aria-label="Edit" onclick="event.stopPropagation();askPin('EDIT STACK',()=>openStack('${s.id}'))">✏️</button><button class="danger" title="Delete" aria-label="Delete" onclick="event.stopPropagation();deleteStack('${s.id}')">🗑️</button></div></div>`}).join(''):'<div class="empty">No Under Issue Stack</div>';
  const all=document.getElementById('savedAll'); if(all) all.innerHTML='';
  h.innerHTML='';
 }
 function login(){if(!pinRequired()){unlock();document.getElementById('login').style.display='none';restoreView();return} if(document.getElementById('loginpin').value===getPin()){unlock();document.getElementById('login').style.display='none';restoreView()}else{document.getElementById('loginpin').value='';document.getElementById('loginpin').focus();toast('Wrong PIN')}}
-window.addEventListener('popstate',()=>{if(isUnlocked()){sessionStorage.removeItem(VIEW);closeModal();render()}});
-window.addEventListener('hashchange',()=>{if(isUnlocked() && !location.hash){sessionStorage.removeItem(VIEW);closeModal();render()}});
 window.addEventListener('popstate',()=>{if(isUnlocked()){sessionStorage.removeItem(VIEW);closeModal();render()}});
 window.addEventListener('hashchange',()=>{if(isUnlocked() && !location.hash){sessionStorage.removeItem(VIEW);closeModal();render()}});
 function openPinSettings(){

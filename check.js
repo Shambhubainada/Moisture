@@ -55,6 +55,11 @@ function askPin(label,onOk){
 }
 function verifyActionPin(){let el=document.getElementById('actionPin');if(!el)return;if(el.value===getPin()){let cb=window._pinCallback;window._pinCallback=null;closeModal();if(cb)cb();}else{el.value='';el.focus();toast('Wrong PIN');}}
 function deleteStack(id){askPin('DELETE STACK',()=>{db.stacks=db.stacks.filter(s=>s.id!==id);save();render();toast('Stack deleted')});}
+function toggleStackView(id){
+ const openId=sessionStorage.getItem(VIEW);
+ if(openId===id){sessionStorage.removeItem(VIEW);history.replaceState(null,'',location.pathname+location.search);render();return;}
+ openStackView(id);
+}
 function openStackView(id){
  const s0=db.stacks.find(x=>x.id===id); if(!s0){backHome();return;}
  current=id; sessionStorage.setItem(VIEW,id); location.hash='stack-'+id;
@@ -67,15 +72,34 @@ function openStackView(id){
  const wrap=document.createElement('div');
  wrap.id='selectedStackView';
  wrap.innerHTML=`<div class="card" style="padding:7px 8px">
-   <button class="primary wide" style="margin:0" onclick="openMoisture('${s.id}')">💧 UPDATE MOISTURE</button>
+   <button class="primary" style="margin:0;padding:6px 10px;font-size:11px;border-radius:8px" onclick="openMoisture('${s.id}')">💧 UPDATE MOISTURE</button>
  </div>
  <div class="card"><div class="section">SAVED MOISTURE ENTRIES <span class="count">${s.entries.length}</span></div>
    <div class="entries">${entriesHtml(s)}</div>
-   ${c.remaining<=50&&c.remaining>=-100 ? `<div style="display:flex;gap:7px;margin-top:8px"><button class="primary wide complete" style="flex:1" onclick="completeStack('${s.id}')">✅ COMPLETE STACK</button><button class="ghost" style="min-width:92px" onclick="openStackDetails('${s.id}')">📋 DETAILS</button></div>` : ''}
+   ${c.remaining<=100&&c.remaining>=-100 ? `<div style="display:flex;gap:7px;margin-top:8px"><button class="primary wide complete" style="flex:1" onclick="completeStack('${s.id}')">✅ COMPLETE STACK</button><button class="ghost" style="min-width:92px" onclick="openStackDetails('${s.id}')">📋 DETAILS</button></div>` : ''}
  </div>`;
  const underCard=document.getElementById('under')?.closest('.card');
  if(underCard) underCard.insertAdjacentElement('afterend',wrap); else main.appendChild(wrap);
  wrap.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function openHistoryView(){
+ current=null; sessionStorage.removeItem(VIEW); location.hash='history-view'; closeModal();
+ document.getElementById('historyCard')?.remove();
+ document.getElementById('selectedStackView')?.remove();
+ const main=document.querySelector('main');
+ const old=document.getElementById('historyView'); if(old)old.remove();
+ const wrap=document.createElement('div'); wrap.id='historyView';
+ const items=db.history.length?db.history.map(s=>{
+   const c=calc(s),diff=c.diff;
+   return `<div class="stack history-stack ${s.commodity==='Wheat'?'w':'r'}" onclick="openHistoryDetails('${s.id}')">
+     <div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div>
+     <div class="history-summary"><span>RMC <b>${Number(s.rmc).toFixed(2)}%</b></span><span>IMC <b>${c.imc.toFixed(2)}%</b></span><span class="history-diff" style="color:${diff<0?'#c62828':'#087b35'}">Difference <b>${diff>=0?'+':''}${diff.toFixed(2)}%</b></span><span>${c.remaining<0?'GP':c.remaining>0?'GR':'BALANCE'} <b>${Math.abs(c.remaining)}</b></span></div></div>
+     <div class="actions"><button class="ghost" title="View" aria-label="View" onclick="event.stopPropagation();openHistoryDetails('${s.id}')">VIEW</button><button class="danger" title="Delete" aria-label="Delete" onclick="event.stopPropagation();deleteHistoryStack('${s.id}')">🗑️</button></div>
+   </div>`;
+ }).join(''):'<div class="empty">No completed stack in History</div>';
+ wrap.innerHTML=`<div class="card"><div class="mhead"><button class="back-highlight" onclick="backHome()">← BACK</button><b>📚 HISTORY</b><span></span></div><div class="section">COMPLETED STACKS <span class="count">${db.history.length}</span></div>${items}<div class="history-bottom"><button class="danger wide" style="padding:5px 8px;font-size:10px" onclick="event.stopPropagation();pinAction('history')">🗑 CLEAR HISTORY</button></div></div>`;
+ main.innerHTML=''; main.appendChild(wrap); window.scrollTo({top:0,behavior:'instant'});
 }
 
 function openHistoryDetails(id){
@@ -87,9 +111,9 @@ function openHistoryDetails(id){
  const wrap=document.createElement('div'); wrap.id='selectedStackView';
  const diffColor=c.diff<0?'#c62828':'#087b35';
  const hasTruck=s.entries.some(e=>String(e.truck||'').trim()!=='');
- const rows=s.entries.length?s.entries.map((e,i)=>`<div class="entry ${s.commodity==='Wheat'?'saved-wheat':'saved-rice'}${hasTruck?' has-truck':' no-truck'}"><span>${i+1}</span>${hasTruck?`<span>${esc(e.truck||'')}</span>`:''}<span>${e.bags}</span><span>${Number(e.moisture).toFixed(2)}%</span><span style="display:flex;align-items:center;justify-content:center;gap:2px"><span class="slip-pill ${e.slip?'slip-yes':'slip-no'}">${e.slip?'YES':'NO'}</span>${entryDateTime(e)}</span></div>`).join(''):'<div class="empty">No moisture entry saved.</div>';
- const head=`<div class="entry${hasTruck?' has-truck':' no-truck'} entryhead"><span>#</span>${hasTruck?'<span>Truck</span>':''}<span>Bags</span><span>Moist.</span><span>Slip</span></div>`;
- wrap.innerHTML=`<div class="card"><div class="mhead"><button class="ghost" onclick="render();window.scrollTo({top:0,behavior:'instant'})">← BACK</button><b>📋 COMPLETED STACK DETAILS</b><span class="badge">COMPLETED</span></div><div class="summary"><div class="sum">STACK<b>${esc(s.stack)}</b></div><div class="sum">${esc(s.commodity)}<b>${s.entries.length} ENTRIES</b></div></div><div class="summary"><div class="sum">TOTAL BAGS<b>${s.total}</b></div><div class="sum">UPDATED BAGS<b>${c.used}</b></div><div class="sum">${s.remaining<0?"GP":s.remaining>0?"GR":"BALANCE"}<b>${Math.abs(s.remaining)}</b></div></div><div class="summary"><div class="sum">RMC<b>${Number(s.rmc).toFixed(2)}%</b></div><div class="sum">CURRENT IMC<b>${c.imc.toFixed(2)}%</b></div><div class="sum">DIFFERENCE<b style="color:${diffColor}">${c.diff>=0?'+':''}${c.diff.toFixed(2)}%</b></div></div></div><div class="card"><div class="section">SAVED MOISTURE ENTRIES <span class="count">${s.entries.length}</span></div><div class="entries">${head}${rows}</div></div>`;
+ const rows=s.entries.length?s.entries.map((e,i)=>`<div class="detail-entry ${hasTruck?'has-truck':'no-truck'}"><span>${i+1}</span>${hasTruck?`<span>${esc(e.truck||'')}</span>`:''}<span>${e.bags}</span><span>${Number(e.moisture).toFixed(2)}%</span><span><span class="slip-pill ${e.slip?'slip-yes':'slip-no'}">${e.slip?'YES':'NO'}</span></span><span class="slip-time">${entryDateTime(e)}</span></div>`).join(''):'<div class="empty">No moisture entry saved.</div>';
+ const head=`<div class="detail-entry ${hasTruck?'has-truck':'no-truck'} detail-entry-head"><span>#</span>${hasTruck?'<span>Truck</span>':''}<span>Bags</span><span>Moist.</span><span>Slip</span><span>Date / Time</span></div>`;
+ wrap.innerHTML=`<div class="card"><div class="mhead"><button class="back-highlight" onclick="openHistoryView()">← BACK</button><b>📋 STACK DETAILS</b><span></span></div><div class="summary"><div class="sum">STACK<b>${esc(s.stack)}</b></div><div class="sum">${esc(s.commodity)}<b>${s.entries.length} ENTRIES</b></div><div class="sum">BALANCE<b>${s.remaining}</b></div></div><div class="summary"><div class="sum">TOTAL BAGS<b>${s.total}</b></div><div class="sum">UPDATED BAGS<b>${c.used}</b></div><div class="sum">${s.remaining<0?'GP':s.remaining>0?'GR':'BALANCE'}<b>${Math.abs(s.remaining)}</b></div></div><div class="summary"><div class="sum">RMC<b>${Number(s.rmc).toFixed(2)}%</b></div><div class="sum">IMC<b>${c.imc.toFixed(2)}%</b></div><div class="sum history-diff" style="color:${diffColor}">DIFFERENCE<b>${c.diff>=0?'+':''}${c.diff.toFixed(2)}%</b></div></div></div><div class="card"><div class="section">SAVED MOISTURE ENTRIES <span class="count">${s.entries.length}</span></div><div class="detail-entries">${head}${rows}</div></div>`;
  const underCard=document.getElementById('under')?.closest('.card'); if(underCard)underCard.insertAdjacentElement('afterend',wrap); else main.appendChild(wrap);
  wrap.scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -103,7 +127,7 @@ function openStackDetails(id){
  const wrap=document.createElement('div'); wrap.id='selectedStackView';
  const diffColor=c.diff<0?'#c62828':'#087b35';
  const hasTruck=s.entries.some(e=>String(e.truck||'').trim()!=='');
- const rows=s.entries.length?s.entries.map((e,i)=>`<div class="entry ${s.commodity==='Wheat'?'saved-wheat':'saved-rice'}${hasTruck?' has-truck':' no-truck'}"><span>${i+1}</span>${hasTruck?`<span>${esc(e.truck||'')}</span>`:''}<span>${e.bags}</span><span>${Number(e.moisture).toFixed(2)}%</span><span style="display:flex;align-items:center;justify-content:center;gap:2px"><span class="slip-pill ${e.slip?'slip-yes':'slip-no'}">${e.slip?'YES':'NO'}</span>${entryDateTime(e)}</span><span><button class="ghost" style="padding:4px 7px;font-size:11px" onclick="editEntry('${s.id}',${i})">VIEW / EDIT</button></span></div>`).join(''):'<div class="empty">No moisture entry yet.</div>';
+ const rows=s.entries.length?s.entries.map((e,i)=>`<div class="entry ${s.commodity==='Wheat'?'saved-wheat':'saved-rice'}${hasTruck?' has-truck':' no-truck'}"><span>${i+1}</span>${hasTruck?`<span>${esc(e.truck||'')}</span>`:''}<span class="saved-bags">${e.bags}</span><span class="saved-moist">${Number(e.moisture).toFixed(2)}%</span><span style="display:flex;align-items:center;justify-content:center;gap:2px"><span class="slip-pill ${e.slip?'slip-yes':'slip-no'}">${e.slip?'YES':'NO'}</span>${entryDateTime(e)}</span><span><button class="ghost" style="padding:4px 7px;font-size:11px" onclick="editEntry('${s.id}',${i})">VIEW / EDIT</button></span></div>`).join(''):'<div class="empty">No moisture entry yet.</div>';
  const head=`<div class="entry${hasTruck?' has-truck':' no-truck'} entryhead"><span>#</span>${hasTruck?'<span>Truck</span>':''}<span>Bags</span><span>Moist.</span><span>Slip</span><span>Action</span></div>`;
  wrap.innerHTML=`<div class="card"><div class="mhead"><button class="ghost" onclick="openStackView('${s.id}')">← BACK</button><b>📋 STACK DETAILS</b><button class="ghost" onclick="openStack('${s.id}')">✏️</button></div><div class="summary"><div class="sum">STACK<b>${esc(s.stack)}</b></div><div class="sum">${esc(s.commodity)}<b>${s.entries.length} ENTRIES</b></div></div><div class="summary"><div class="sum">TOTAL BAGS<b>${s.total}</b></div><div class="sum">UPDATED BAGS<b>${c.used}</b></div><div class="sum">REMAINING<b>${c.remaining}</b></div></div><div class="summary"><div class="sum">RMC<b>${Number(s.rmc).toFixed(2)}%</b></div><div class="sum">CURRENT IMC<b>${c.imc.toFixed(2)}%</b></div><div class="sum">DIFFERENCE<b style="color:${diffColor}">${c.diff>=0?'+':''}${c.diff.toFixed(2)}%</b></div></div></div><div class="card"><div class="section">MOISTURE ENTRY DETAILS <span class="count">${s.entries.length}</span></div><div class="entries">${head}${rows}</div></div>`;
  const underCard=document.getElementById('under')?.closest('.card'); if(underCard)underCard.insertAdjacentElement('afterend',wrap); else main.appendChild(wrap);
@@ -128,18 +152,18 @@ function entriesHtml(s){
      : '<span class="slip-pill slip-no">NO</span>';
    const dt=entryDateTime(e);
    const rowClass=s.commodity==='Wheat'?'saved-wheat':'saved-rice';
-   return `<div class="entry ${rowClass}${cols}"><span>${i+1}</span>${hasTruck?`<span>${esc(e.truck||'')}</span>`:''}<span>${e.bags}</span><span>${Number(e.moisture).toFixed(2)}%</span><span style="display:flex;align-items:center;justify-content:center"><button class="slip-btn" style="border:0;background:transparent;padding:0" onclick="toggleSlip('${s.id}',${i})">${slip}</button></span><span class="entry-date">${dt}</span><span><button class="ghost" style="padding:3px 5px;font-size:9px" onclick="editEntry('${s.id}',${i})">EDIT</button> <button class="danger" style="padding:3px 5px;font-size:9px" onclick="deleteEntry('${s.id}',${i})">DEL</button></span></div>`;
+   return `<div class="entry ${rowClass}${cols}"><span>${i+1}</span>${hasTruck?`<span>${esc(e.truck||'')}</span>`:''}<span class="saved-bags">${e.bags}</span><span class="saved-moist">${Number(e.moisture).toFixed(2)}%</span><span style="display:flex;align-items:center;justify-content:center"><button class="slip-btn" style="border:0;background:transparent;padding:0" onclick="toggleSlip('${s.id}',${i})">${slip}</button></span><span class="entry-date">${dt}</span><span class="entry-actions"><button class="ghost icon-action" aria-label="Edit" title="Edit" onclick="editEntry('${s.id}',${i})">✏️</button><button class="danger icon-action" aria-label="Delete" title="Delete" onclick="deleteEntry('${s.id}',${i})">🗑️</button></span></div>`;
  }).join('');
  const total=calc(s);
  const diffColor=total.diff<0?'#c62828':'#087b35';
- const summary=`<div class="stack-moisture-summary"><div class="sms-item"><span class="sms-label">RMC</span><span class="sms-value">${Number(s.rmc).toFixed(2)}%</span></div><div class="sms-item"><span class="sms-label">IMC</span><span class="sms-value">${total.imc.toFixed(2)}%</span></div><div class="sms-item"><span class="sms-label">DIFFERENCE</span><span class="sms-value" style="color:${diffColor}">${total.diff>=0?'+':''}${total.diff.toFixed(2)}%</span></div><div class="sms-item"><span class="sms-label">REMAINING BAGS</span><span class="sms-value">${total.remaining}</span></div></div>`;
+ const summary=`<div class="stack-moisture-summary"><div class="sms-item"><span class="sms-label">RMC</span><span class="sms-value">${Number(s.rmc).toFixed(2)}%</span></div><div class="sms-item"><span class="sms-label">IMC</span><span class="sms-value">${total.imc.toFixed(2)}%</span></div><div class="sms-item difference-blink"><span class="sms-label">DIFFERENCE</span><span class="sms-value" style="color:${diffColor}">${total.diff>=0?'+':''}${total.diff.toFixed(2)}%</span></div><div class="sms-item"><span class="sms-label">REMAINING BAGS</span><span class="sms-value">${total.remaining}</span></div></div>`;
  return head+rows+summary;
 }
 function openMoisture(id,idx=null){
  let s=db.stacks.find(x=>x.id===id), e=idx==null?null:s.entries[idx], c=calc(s);
  show(`<div class="mhead"><button class="back-highlight" onclick="openStackView('${id}')">← BACK</button><b>💧 ${e?'EDIT':'UPDATE'} MOISTURE</b><button class="x" onclick="openStackView('${id}')">×</button></div>
  <div class="summary"><div class="sum">STACK<b>${esc(s.stack)}</b></div><div class="rmc-tap" onclick="unlockPopupRmc('${id}',${idx==null?'null':idx})">RMC <b id="popupRmc">${Number(s.rmc).toFixed(2)}%</b><small style="font-size:9px;color:#68756d">Tap to edit</small></div><div class="sum">REMAINING<b id="rem">${c.remaining}</b></div></div>
- <div id="mdiff" class="diff" style="margin-top:7px">&nbsp;</div>
+ <div id="mdiff" class="diff" style="margin-top:7px">&nbsp;</div><div id="merror" class="input-error" role="alert"></div>
  <div class="field" style="margin-top:7px"><label>TRUCK NUMBER (OPTIONAL)</label><input id="mtruck" value="${esc(e?.truck||'')}" placeholder="Optional" oninput="this.value=this.value.toUpperCase()"></div>
  <div class="grid moistgrid" style="margin-top:8px"><div class="field moist-bags"><label>UPDATE BAGS</label><input id="mbags" type="number" inputmode="numeric" value="${e?.bags??''}" oninput="preview('${id}',${idx==null?'null':idx})"></div><div class="field moist-m"><label>MOISTURE %</label><input id="mmoist" type="number" step="0.01" inputmode="decimal" value="${e?.moisture??''}" oninput="preview('${id}',${idx==null?'null':idx})"></div></div>
  <input id="mrmc" type="hidden" value="${Number(s.rmc).toFixed(2)}">
@@ -161,16 +185,30 @@ function verifyInlineRmc(id,idx){
   const inp=document.getElementById('mrmcEdit');inp?.focus();inp?.select();
  }
 }
+function moistureError(msg,fields=[]){
+ const box=document.getElementById('merror'); if(box){box.innerHTML='⚠️ <b>Input Error</b><br>'+esc(msg);box.classList.add('show');}
+ ['mbags','mmoist','mtruck'].forEach(id=>document.getElementById(id)?.classList.remove('invalid-field'));
+ fields.forEach(id=>document.getElementById(id)?.classList.add('invalid-field'));
+}
+function clearMoistureError(){const box=document.getElementById('merror');if(box){box.classList.remove('show');box.innerHTML='';}['mbags','mmoist','mtruck'].forEach(id=>document.getElementById(id)?.classList.remove('invalid-field'));}
 function preview(id,idx){
- let s=db.stacks.find(x=>x.id===id), bags=Number(document.getElementById('mbags')?.value||0), m=Number(document.getElementById('mmoist')?.value||0);
- let old=idx==null?0:Number(s.entries[idx]?.bags||0), entries=s.entries.filter((_,i)=>i!==idx); entries.push({bags,moisture:m});
- let c=calc({...s,entries}); let d=document.getElementById('mdiff');if(!d)return;
+ let s=db.stacks.find(x=>x.id===id), bagsRaw=document.getElementById('mbags')?.value||'', mRaw=document.getElementById('mmoist')?.value||'', bags=Number(bagsRaw), m=Number(mRaw);
+ clearMoistureError();
+ if(bagsRaw!=='' && (!Number.isFinite(bags)||bags<=0)){moistureError('Bags must be greater than 0.', ['mbags']);return}
+ if(mRaw!=='' ){let max=s.commodity==='Wheat'?14:15;if(!Number.isFinite(m)||m<0||m>max){moistureError(`${s.commodity} moisture must be between 0% and ${max}%.`, ['mmoist']);return}}
+ let entries=s.entries.filter((_,i)=>i!==idx); if(bags>0 && Number.isFinite(m)) entries.push({bags,moisture:m});
+ let c=calc({...s,entries}), d=document.getElementById('mdiff');if(!d)return;
+ if(c.remaining < -100){moistureError('Remaining Bags cannot go below -100. Please reduce Update Bags.', ['mbags']);d.innerHTML='&nbsp;';d.className='diff';return}
  if(!bags||!m){d.innerHTML='&nbsp;';d.className='diff';return} d.textContent='Difference Projection: '+(c.diff>=0?'+':'')+c.diff.toFixed(2)+'%';d.className='diff '+(c.diff>0?'pos':c.diff<0?'neg':'');
 }
 function saveMoisture(id,idx){
- let s=db.stacks.find(x=>x.id===id), bags=Number(document.getElementById('mbags').value), m=Number(document.getElementById('mmoist').value), truck=document.getElementById('mtruck').value.trim().toUpperCase(), newRmc=Number(document.getElementById('mrmcEdit')?.value||document.getElementById('mrmc').value), oldRmc=Number(s.rmc), slip=idx==null ? true : (s.entries[idx]?.slip!==false);
- let max=s.commodity==='Wheat'?14:15;
- if(!bags||bags<0||m<0||m>max||!Number.isFinite(newRmc)||newRmc<0||newRmc>15){alert(newRmc>15?'RMC cannot be more than 15%':`${s.commodity} maximum moisture is ${max}%`);return}
+ let s=db.stacks.find(x=>x.id===id), bagsEl=document.getElementById('mbags'), mEl=document.getElementById('mmoist');
+ let bags=Number(bagsEl.value), m=Number(mEl.value), truck=document.getElementById('mtruck').value.trim().toUpperCase(), newRmc=Number(document.getElementById('mrmcEdit')?.value||document.getElementById('mrmc').value), oldRmc=Number(s.rmc), slip=idx==null ? true : (s.entries[idx]?.slip!==false), max=s.commodity==='Wheat'?14:15;
+ clearMoistureError();
+ if(!bagsEl.value.trim()||!Number.isFinite(bags)||bags<=0){moistureError('Please enter a valid Bags value greater than 0.', ['mbags']);bagsEl.focus();return}
+ if(!mEl.value.trim()||!Number.isFinite(m)||m<0||m>max){moistureError(`Please enter valid Moisture. ${s.commodity} maximum is ${max}%.`, ['mmoist']);mEl.focus();return}
+ let testEntries=s.entries.filter((_,i)=>i!==idx);testEntries.push({bags,moisture:m});let projected=calc({...s,entries:testEntries}).remaining;if(projected < -100){moistureError('Remaining Bags cannot go below -100. Please reduce Update Bags.', ['mbags']);bagsEl.focus();return}
+ if(!Number.isFinite(newRmc)||newRmc<0||newRmc>15){moistureError('RMC must be between 0% and 15%.');return}
  const finish=()=>{s.rmc=newRmc;let e={bags,moisture:m,truck,slip,date:new Date().toISOString()};if(idx==null)s.entries.push(e);else s.entries[idx]=e;save();openStackView(id);toast('Moisture saved')};
  if(newRmc!==oldRmc){askPin('RMC CHANGE',finish);return}
  finish();
@@ -185,7 +223,7 @@ function toggleSlip(id,i){
  openStackView(id);
 }
 function completeStack(id){
- let s=db.stacks.find(x=>x.id===id), c=calc(s);if(!(c.remaining<=50&&c.remaining>=-100))return;
+ let s=db.stacks.find(x=>x.id===id), c=calc(s);if(!(c.remaining<=100&&c.remaining>=-100))return;
  if(!confirm(`Complete stack ${s.stack} and move it to History?`))return;
  db.history.unshift({...s,completedAt:new Date().toISOString(),remaining:c.remaining});db.stacks=db.stacks.filter(x=>x.id!==id);save();closeModal();toast('Stack moved to History');
 }
@@ -197,14 +235,16 @@ function pinAction(type){
 }
 function render(){
  document.getElementById("selectedStackView")?.remove();
- let u=document.getElementById('under'),h=document.getElementById('history');document.getElementById('ucount').textContent=db.stacks.length;document.getElementById('hcount').textContent=db.history.length;
- u.innerHTML=db.stacks.length?db.stacks.map(s=>{let c=calc(s);let diff=c.diff;return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="under-summary"><span>RMC <b>${Number(s.rmc).toFixed(2)}%</b></span><span>IMC <b>${c.imc.toFixed(2)}%</b></span><span>Diff <b style="color:${diff<0?'#c62828':'#087b35'}">${diff>=0?'+':''}${diff.toFixed(2)}%</b></span><span>Remaining <b>${c.remaining}</b></span></div></div><div class="actions"><button class="ghost" onclick="openStackView('${s.id}')">OPEN</button><button class="ghost" onclick="openStack('${s.id}')">EDIT</button><button class="danger" onclick="deleteStack('${s.id}')">DELETE</button></div></div>`}).join(''):'<div class="empty">No Under Issue Stack</div>';
+ let main=document.querySelector('main');
+ if(!document.getElementById('under') || !document.getElementById('historyCard')){
+   main.innerHTML=`<div class="card" style="padding:7px 9px"><div style="display:flex;gap:6px"><button class="primary add-stack-btn" onclick="openStack()">➕ ADD STACK</button><button class="ghost add-stack-btn" onclick="openPinSettings()">🔐 PIN</button></div></div><div class="card"><div class="section">UNDER ISSUE STACK <span class="count" id="ucount">0</span></div><div id="under"></div></div><div class="card" id="historyCard" onclick="openHistoryView()"><div class="section">HISTORY <span class="count" id="hcount">0</span><span style="float:right;font-size:10px;color:#075ea8;font-weight:900">VIEW →</span></div><div class="empty" style="padding:7px 2px">Tap History to view completed stacks</div></div>`;
+ }
+ let u=document.getElementById('under'),h=document.getElementById('historyCard');document.getElementById('ucount').textContent=db.stacks.length;document.getElementById('hcount').textContent=db.history.length;
+ u.innerHTML=db.stacks.length?db.stacks.map(s=>{let c=calc(s);let diff=c.diff;return `<div class="stack tap-open ${s.commodity==='Wheat'?'w':'r'}" onclick="toggleStackView('${s.id}')"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="under-summary"><span>RMC <b>${Number(s.rmc).toFixed(2)}%</b></span><span>IMC <b>${c.imc.toFixed(2)}%</b></span><span class="difference-blink" style="border-radius:5px;padding:1px 3px">Diff <b style="color:${diff<0?'#c62828':'#087b35'}">${diff>=0?'+':''}${diff.toFixed(2)}%</b></span><span>Remaining <b>${c.remaining}</b></span></div></div><div class="actions"><button class="ghost" title="Edit" aria-label="Edit" onclick="event.stopPropagation();askPin('EDIT STACK',()=>openStack('${s.id}'))">✏️</button><button class="danger" title="Delete" aria-label="Delete" onclick="event.stopPropagation();deleteStack('${s.id}')">🗑️</button></div></div>`}).join(''):'<div class="empty">No Under Issue Stack</div>';
  const all=document.getElementById('savedAll'); if(all) all.innerHTML='';
- h.innerHTML=db.history.length?db.history.map(s=>{let c=calc(s);return `<div class="stack ${s.commodity==='Wheat'?'w':'r'}"><div><div class="stackname">${esc(s.stack)} · ${s.commodity}</div><div class="meta">Total ${s.total} | Remaining ${s.remaining} | RMC ${Number(s.rmc).toFixed(2)}% | Entries ${s.entries.length}</div></div><div class="actions"><span class="badge">COMPLETED</span><button class="ghost" onclick="openHistoryDetails('${s.id}')">📋 DETAILS</button><button class="danger" onclick="deleteHistoryStack('${s.id}')">DEL</button></div></div>`}).join(''):'<div class="empty">No History</div>';
+ h.innerHTML='';
 }
 function login(){if(!pinRequired()){unlock();document.getElementById('login').style.display='none';restoreView();return} if(document.getElementById('loginpin').value===getPin()){unlock();document.getElementById('login').style.display='none';restoreView()}else{document.getElementById('loginpin').value='';document.getElementById('loginpin').focus();toast('Wrong PIN')}}
-window.addEventListener('popstate',()=>{if(isUnlocked()){sessionStorage.removeItem(VIEW);closeModal();render()}});
-window.addEventListener('hashchange',()=>{if(isUnlocked() && !location.hash){sessionStorage.removeItem(VIEW);closeModal();render()}});
 window.addEventListener('popstate',()=>{if(isUnlocked()){sessionStorage.removeItem(VIEW);closeModal();render()}});
 window.addEventListener('hashchange',()=>{if(isUnlocked() && !location.hash){sessionStorage.removeItem(VIEW);closeModal();render()}});
 function openPinSettings(){
